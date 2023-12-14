@@ -4,12 +4,18 @@
 constexpr int NUM_LEDS = 4;
 CRGB leds[NUM_LEDS];
 
+// Team Buttons--------------------------------------------
+
 constexpr int B_PRT = 8;
 constexpr int R_PRT = 9;
+
+// Game Time Buttons---------------------------------------
 
 constexpr int MIN_5 = 7;
 constexpr int MIN_10 = 6;
 constexpr int MIN_15 = 5;
+
+// Flow Control--------------------------------------------
 
 constexpr int READY = 4;
 constexpr int RESET = 3;
@@ -21,6 +27,8 @@ constexpr int D_DIO = 23;
 TM1637Display timer(D_CLK, D_DIO);
 
 const uint8_t all_on[] = {0xff, 0xff, 0xff, 0xff};
+
+// Timings-------------------------------------------------
 
 constexpr unsigned long GRACE_PERIOD = 30000;
 constexpr unsigned long LIMIT_SHOWN = 5000;
