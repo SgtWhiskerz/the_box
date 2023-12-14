@@ -2,7 +2,9 @@
 #include "TM1637Display.h"
 
 constexpr int NUM_LEDS = 4;
-CRGB leds[NUM_LEDS];
+CRGB top_leds[NUM_LEDS];
+CRGB rhs_leds[NUM_LEDS];
+CRGB lhs_leds[NUM_LEDS];
 
 // Team Buttons--------------------------------------------
 
@@ -75,7 +77,9 @@ struct BoxStateMachine {
 
 void setup() {
     Serial.begin(9600);
-    FastLED.addLeds<NEOPIXEL, 2>(leds, NUM_LEDS);
+    FastLED.addLeds<NEOPIXEL, 2>(top_leds, NUM_LEDS);
+    // FastLED.addLeds<NEOPIXEL, _>(rhs_leds, NUM_LEDS);
+    // FastLED.addLeds<NEOPIXEL, _>(lhs_leds, NUM_LEDS);
     pinMode(B_PRT, INPUT);
     pinMode(R_PRT, INPUT);
     pinMode(MIN_5, INPUT);
@@ -113,10 +117,14 @@ void teamButtons() {
 
     for(int i = 0; i < NUM_LEDS; i++) {
         if(team) {
-            leds[i] = CRGB::Blue;
+            top_leds[i] = CRGB::Blue;
+            rhs_leds[i] = CRGB::Blue;
+            lhs_leds[i] = CRGB::Blue;
         }
         else {
-            leds[i] = CRGB::Red;
+            top_leds[i] = CRGB::Red;
+            rhs_leds[i] = CRGB::Red;
+            lhs_leds[i] = CRGB::Red;
         }
     }
     FastLED.show();
