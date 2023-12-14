@@ -76,6 +76,17 @@ constexpr int getMin(unsigned long int millis) {
     return millis / 60000;
 }
 
+void displayTime(int min, int sec) {
+    timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
+    timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
+}
+
+void displayMillis(unsigned long milli) {
+    int sec = getSec(milli);
+    int min = getMin(milli);
+    displayTime(min, sec);
+}
+
 void teamButtons() {
     static bool team{false};
     if(digitalRead(B_PRT) == HIGH) { team = true; }
@@ -129,19 +140,13 @@ void loop() {
             }
             unsigned long elapsed_time = millis() - machine.change;
             if(!shown_time) {
-                int sec = getSec(time_limit);
-                int min = getMin(time_limit);
-                timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
-                timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
+                displayMillis(time_limit);
                 if(elapsed_time > LIMIT_SHOWN) {
                     shown_time = true;
                 }
             } else {
                 unsigned long rem_grace = GRACE_PERIOD - elapsed_time;
-                int min = getMin(rem_grace);
-                int sec = getSec(rem_grace);
-                timer.showNumberDecEx(sec, 0b111000000, true, 2, 2);
-                timer.showNumberDecEx(min, 0b111000000, true, 2, 0);
+                displayMillis(rem_grace);
             }
 
             if(elapsed_time > GRACE_PERIOD) {
@@ -165,10 +170,7 @@ void loop() {
                 if(digitalRead(READY)) { machine.transitionTo(BOX_STATE::CONFIG); }
             } else {
                 teamButtons();
-                int sec = getSec(remain);
-                int min = getMin(remain);
-                timer.showNumberDecEx(sec, 0b111000000, true, 2, 2);
-                timer.showNumberDecEx(min, 0b111000000, true, 2, 0);
+                displayMillis(remain);
             }
 
             machine.last = BOX_STATE::RUNNING;
