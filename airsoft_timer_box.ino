@@ -39,8 +39,6 @@ struct BoxStateMachine {
     BOX_STATE last = BOX_STATE::NONE;
     unsigned long change = 0;
 
-    BoxStateMachine() {}
-
     void transitionTo(BOX_STATE new_state) {
         last = state;
         state = new_state;
@@ -87,46 +85,41 @@ void teamButtons() {
 }
 
 void loop() {
-    static BOX_STATE state{BOX_STATE::CONFIG};
-    static BOX_STATE last{BOX_STATE::NONE};
+    static BoxStateMachine machine;
     static unsigned long time_limit = 0;
 
-    if(digitalRead(RESET)) { state = BOX_STATE::CONFIG; }
+    if(digitalRead(RESET)) { machine.transitionTo(BOX_STATE::CONFIG); }
 
-    switch(state) {
+    switch(machine.state) {
         case BOX_STATE::CONFIG: {
-            static unsigned long disp_change{millis()};
             static bool on{true};
-            if(millis() - disp_change > 1000) {
+            if(millis() - machine.change > 1000) {
                 if(on) { timer.setSegments(all_on); }
                 else { timer.clear(); }
-                disp_change = millis();
                 on = !on;
             }
             if(digitalRead(MIN_5) == HIGH) {
                 time_limit = 5 * 60000;
-                state = BOX_STATE::GRACE;
+                machine.transitionTo(BOX_STATE::GRACE);
             }
             if(digitalRead(MIN_10) == HIGH) {
                 time_limit = 10 * 60000;
-                state = BOX_STATE::GRACE;
+                machine.transitionTo(BOX_STATE::GRACE);
             }
             if(digitalRead(MIN_15) == HIGH) {
                 time_limit = 15 * 60000;
-                state = BOX_STATE::GRACE;
+                machine.transitionTo(BOX_STATE::GRACE);
             }
 
-            last = BOX_STATE::CONFIG;
+            machine.last = BOX_STATE::CONFIG;
             break;
         }
         case BOX_STATE::GRACE: {
-            static unsigned long grace_begin{0};
             static bool shown_time{false};
-            if(last != BOX_STATE::GRACE) {
-                grace_begin = millis();
+            if(machine.last != BOX_STATE::GRACE) {
                 shown_time = false;
             }
-            unsigned long elapsed_time = millis() - grace_begin;
+            unsigned long elapsed_time = millis() - machine.change;
             if(!shown_time) {
                 int sec = getSec(time_limit);
                 int min = getMin(time_limit);
@@ -144,28 +137,24 @@ void loop() {
             }
 
             if(elapsed_time > GRACE_PERIOD) {
-                state = BOX_STATE::RUNNING;
+                machine.transitionTo(BOX_STATE::RUNNING);
             }
             
-            last = BOX_STATE::GRACE;
+            machine.last = BOX_STATE::GRACE;
             break;
         }
         case BOX_STATE::RUNNING: {
-            static unsigned long match_begin{millis()};
-            if(last != BOX_STATE::RUNNING) {
-                match_begin = millis();
-            }
-            if(millis() - match_begin < RING_START) { digitalWrite(HEADACHE, HIGH); }
+            if(millis() - machine.change < RING_START) { digitalWrite(HEADACHE, HIGH); }
             else { digitalWrite(HEADACHE, LOW); }
 
-            unsigned long elapsed = millis() - match_begin;
+            unsigned long elapsed = millis() - machine.change;
             long remain = time_limit - elapsed;
             
             if(remain <= 0) {
                 if(remain * -1 < RING_END) { digitalWrite(HEADACHE, HIGH); }
                 else { digitalWrite(HEADACHE, LOW); }
 
-                if(digitalRead(READY)) { state = BOX_STATE::CONFIG; }
+                if(digitalRead(READY)) { machine.transitionTo(BOX_STATE::CONFIG); }
             } else {
                 teamButtons();
                 int sec = getSec(remain);
@@ -174,7 +163,7 @@ void loop() {
                 timer.showNumberDecEx(min, 0b111000000, true, 2, 0);
             }
 
-            last = BOX_STATE::RUNNING;
+            machine.last = BOX_STATE::RUNNING;
             break;
         }
     }
