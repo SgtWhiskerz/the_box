@@ -42,12 +42,31 @@ enum class BOX_STATE {
     RUNNING
 };
 
+char *stateToString(BOX_STATE state) {
+    switch(state) {
+        case BOX_STATE::NONE: 
+            return "None";
+        case BOX_STATE::CONFIG:
+            return "Config";
+        case BOX_STATE::GRACE;
+            return "Grace";
+        case BOX_STATE::RUNNING:
+            return "Running";
+        default:
+            return "[Missing Entry]";
+    }
+}
+
 struct BoxStateMachine {
     BOX_STATE state = BOX_STATE::NONE;
     BOX_STATE last = BOX_STATE::NONE;
     unsigned long change = 0;
 
     void transitionTo(BOX_STATE new_state) {
+        Serial.print("Request to change box state. From ");
+        Serial.print(stateToString(state));
+        Serial.print(" to ");
+        Serial.println(stateToString(new_state));
         last = state;
         state = new_state;
         change = millis();
@@ -106,6 +125,7 @@ void teamButtons() {
 void loop() {
     static BoxStateMachine machine;
     static unsigned long time_limit = 0;
+    unsigned long tick_start = millis();
 
     if(digitalRead(RESET)) { machine.transitionTo(BOX_STATE::CONFIG); }
 
@@ -177,4 +197,6 @@ void loop() {
             break;
         }
     }
+    Serial.print("Loop complete. Duration in milliseconds: ");
+    Serial.println(millis() - tick_start);
 }
