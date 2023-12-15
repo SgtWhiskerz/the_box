@@ -37,6 +37,12 @@ constexpr unsigned long LIMIT_SHOWN = 5000;
 constexpr unsigned long RING_START = 750;
 constexpr unsigned long RING_END = 1000;
 
+enum class ACTIVE_TEAM {
+    NEUTRAL,
+    BLUE,
+    RED
+};
+
 enum class BOX_STATE {
     NONE,
     CONFIG,
@@ -110,22 +116,23 @@ void displayMillis(unsigned long milli) {
     displayTime(min, sec);
 }
 
-void teamButtons() {
-    static bool team{false};
-    if(digitalRead(B_PRT) == HIGH) { team = true; }
-    else if(digitalRead(R_PRT) == HIGH) { team = false; }
+void teamButtons(ACTIVE_TEAM &team) {
+    if(digitalRead(B_PRT) == HIGH) { team = ACTIVE_TEAM::BLUE; }
+    else if(digitalRead(R_PRT) == HIGH) { team = ACTIVE_TEAM::RED; }
 
+    CRGB color = CRGB::White;
+    switch(team) {
+        case ACTIVE_TEAM::BLUE:
+            color = CRGB::Blue;
+            break;
+        case ACTIVE_TEAM::RED:
+            color = CRGB::Red;
+            break;
+    }
     for(int i = 0; i < NUM_LEDS; i++) {
-        if(team) {
-            top_leds[i] = CRGB::Blue;
-            rhs_leds[i] = CRGB::Blue;
-            lhs_leds[i] = CRGB::Blue;
-        }
-        else {
-            top_leds[i] = CRGB::Red;
-            rhs_leds[i] = CRGB::Red;
-            lhs_leds[i] = CRGB::Red;
-        }
+        top_leds[i] = color;
+        rhs_leds[i] = color;
+        lhs_leds[i] = color;
     }
     FastLED.show();
 }
@@ -185,6 +192,10 @@ void loop() {
             break;
         }
         case BOX_STATE::RUNNING: {
+            static ACTIVE_TEAM win_team{ACTIVE_TEAM::NEUTRAL};
+            if(machine.last != BOX_STATE::RUNNING) {
+                win_team = ACTIVE_TEAM::NEUTRAL;
+            }
             if(millis() - machine.change < RING_START) { digitalWrite(HEADACHE, HIGH); }
             else { digitalWrite(HEADACHE, LOW); }
 
@@ -197,7 +208,7 @@ void loop() {
 
                 if(digitalRead(READY)) { machine.transitionTo(BOX_STATE::CONFIG); }
             } else {
-                teamButtons();
+                teamButtons(win_team);
                 displayMillis(remain);
             }
 
