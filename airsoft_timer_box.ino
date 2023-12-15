@@ -56,6 +56,119 @@ char *stateToString(BOX_STATE state) {
   }
 }
 
+class BoxState {
+public:
+  virtual ~BoxState() = default;
+
+  virtual BoxState *tick() = 0;
+
+protected:
+  unsigned long change = millis();
+};
+
+class BoxConfig : public BoxState {
+public:
+  BoxState *tick() final;
+
+private:
+  bool on = true;
+};
+
+class BoxRun : public BoxState {
+public:
+  BoxRun(unsigned long);
+
+  BoxState *tick() final;
+
+private:
+  ACTIVE_TEAM winning = ACTIVE_TEAM::NEUTRAL;
+  unsigned long limit;
+};
+
+BoxRun::BoxRun(unsigned long r_limit) : limit(r_limit) {}
+
+BoxState *BoxRun::tick() {
+  unsigned long time = millis();
+  unsigned long elapsed = time - change;
+  long remain = limit - elapsed;
+  if (elapsed < RING_START) {
+    digitalWrite(HEADACHE, HIGH);
+  } else {
+    digitalWrite(HEADACHE, LOW);
+  }
+
+  if (remain < 0) { // TODO: test this for game satisfaction
+                    // should the game end at 00:00:00 or 00:00:??
+    if (remain * -1 < RING_END) {
+      digitalWrite(HEADACHE, HIGH);
+    } else {
+      digitalWrite(HEADACHE, LOW);
+    }
+
+    if (digitalRead(READY) == HIGH) {
+      return new BoxConfig();
+    }
+  } else {
+    teamButtons(winning);
+    displayMillis(remain);
+  }
+  return this;
+}
+
+class BoxGrace : public BoxState {
+public:
+  BoxGrace(unsigned long);
+
+  BoxState *tick() final;
+
+private:
+  bool cnt_dwn = false;
+  unsigned long limit;
+};
+
+BoxGrace::BoxGrace(unsigned long r_limit) : limit(r_limit) {}
+
+BoxState *BoxGrace::tick() {
+  unsigned long time = millis();
+  unsigned long elapsed = time - change;
+  if (!cnt_dwn) {
+    displayMillis(limit);
+    if (time - change > LIMIT_SHOWN) {
+      cnt_dwn = true;
+    }
+  } else {
+    displayMillis(GRACE_PERIOD - elapsed);
+  }
+
+  if (time - change > GRACE_PERIOD) {
+    return new BoxRun(limit);
+  }
+  return this;
+}
+
+BoxState *BoxConfig::tick() {
+  static unsigned long time = 0;
+  if (time - change > 1000) {
+    if (on) {
+      timer.setSegments(all_on);
+    } else {
+      timer.clear();
+    }
+    on = !on;
+    time = millis();
+  }
+  if (digitalRead(MIN_5) == HIGH) {
+    return new BoxGrace(5 * 60000);
+  }
+  if (digitalRead(MIN_10) == HIGH) {
+    return new BoxGrace(10 * 60000);
+  }
+  if (digitalRead(MIN_15) == HIGH) {
+    return new BoxGrace(15 * 60000);
+  }
+  return this;
+}
+
 struct BoxStateMachine {
   BOX_STATE state = BOX_STATE::NONE;
   BOX_STATE last = BOX_STATE::NONE;
@@ -128,97 +241,22 @@ void teamButtons(ACTIVE_TEAM &team) {
 }
 
 void loop() {
-  static BoxStateMachine machine;
-  static unsigned long time_limit = 0;
+  static BoxState *state = new BoxConfig();
+  static BoxState *next = nullptr;
   unsigned long tick_start = millis();
 
+  next = state->tick();
+
   if (digitalRead(RESET)) {
-    machine.transitionTo(BOX_STATE::CONFIG);
+    delete next;
+    next = new BoxConfig();
+  }
+  if (next != state) {
+    delete state;
+    state = next;
+    next = nullptr;
   }
 
-  switch (machine.state) {
-  case BOX_STATE::CONFIG: {
-    static bool on{true};
-    if (millis() - machine.change > 1000) {
-      if (on) {
-        timer.setSegments(all_on);
-      } else {
-        timer.clear();
-      }
-      on = !on;
-    }
-    if (digitalRead(MIN_5) == HIGH) {
-      time_limit = 5 * 60000;
-      machine.transitionTo(BOX_STATE::GRACE);
-    }
-    if (digitalRead(MIN_10) == HIGH) {
-      time_limit = 10 * 60000;
-      machine.transitionTo(BOX_STATE::GRACE);
-    }
-    if (digitalRead(MIN_15) == HIGH) {
-      time_limit = 15 * 60000;
-      machine.transitionTo(BOX_STATE::GRACE);
-    }
-
-    machine.last = BOX_STATE::CONFIG;
-    break;
-  }
-  case BOX_STATE::GRACE: {
-    static bool shown_time{false};
-    if (machine.last != BOX_STATE::GRACE) {
-      shown_time = false;
-    }
-    unsigned long elapsed_time = millis() - machine.change;
-    if (!shown_time) {
-      displayMillis(time_limit);
-      if (elapsed_time > LIMIT_SHOWN) {
-        shown_time = true;
-      }
-    } else {
-      unsigned long rem_grace = GRACE_PERIOD - elapsed_time;
-      displayMillis(rem_grace);
-    }
-
-    if (elapsed_time > GRACE_PERIOD) {
-      machine.transitionTo(BOX_STATE::RUNNING);
-    }
-
-    machine.last = BOX_STATE::GRACE;
-    break;
-  }
-  case BOX_STATE::RUNNING: {
-    static ACTIVE_TEAM win_team{ACTIVE_TEAM::NEUTRAL};
-    if (machine.last != BOX_STATE::RUNNING) {
-      win_team = ACTIVE_TEAM::NEUTRAL;
-    }
-    if (millis() - machine.change < RING_START) {
-      digitalWrite(HEADACHE, HIGH);
-    } else {
-      digitalWrite(HEADACHE, LOW);
-    }
-
-    unsigned long elapsed = millis() - machine.change;
-    long remain = time_limit - elapsed;
-
-    if (remain <= 0) {
-      if (remain * -1 < RING_END) {
-        digitalWrite(HEADACHE, HIGH);
-      } else {
-        digitalWrite(HEADACHE, LOW);
-      }
-
-      if (digitalRead(READY) == HIGH) {
-        machine.transitionTo(BOX_STATE::CONFIG);
-      }
-    } else {
-      teamButtons(win_team);
-      displayMillis(remain);
-    }
-
-    machine.last = BOX_STATE::RUNNING;
-    break;
-  }
-  }
   Serial.print("Loop complete. Duration in milliseconds: ");
   Serial.println(millis() - tick_start);
 }
