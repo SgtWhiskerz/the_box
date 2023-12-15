@@ -206,7 +206,7 @@ void loop() {
                 if(remain * -1 < RING_END) { digitalWrite(HEADACHE, HIGH); }
                 else { digitalWrite(HEADACHE, LOW); }
 
-                if(digitalRead(READY)) { machine.transitionTo(BOX_STATE::CONFIG); }
+                if(digitalRead(READY) == HIGH) { machine.transitionTo(BOX_STATE::CONFIG); }
             } else {
                 teamButtons(win_team);
                 displayMillis(remain);
