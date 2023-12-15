@@ -50,7 +50,7 @@ char *stateToString(BOX_STATE state) {
             return "None";
         case BOX_STATE::CONFIG:
             return "Config";
-        case BOX_STATE::GRACE;
+        case BOX_STATE::GRACE:
             return "Grace";
         case BOX_STATE::RUNNING:
             return "Running";
