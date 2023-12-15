@@ -27,6 +27,12 @@ constexpr unsigned long LIMIT_SHOWN = 5000;
 constexpr unsigned long RING_START = 750;
 constexpr unsigned long RING_END = 1000;
 
+enum class ACTIVE_TEAM {
+    NEUTRAL,
+    BLUE,
+    RED
+};
+
 enum class BOX_STATE {
     NONE,
     CONFIG,
@@ -70,18 +76,21 @@ constexpr int getMin(unsigned long int millis) {
     return millis / 60000;
 }
 
-void teamButtons() {
-    static bool team{false};
-    if(digitalRead(B_PRT) == HIGH) { team = true; }
-    else if(digitalRead(R_PRT) == HIGH) { team = false; }
+void teamButtons(ACTIVE_TEAM &team) {
+    if(digitalRead(B_PRT) == HIGH) { team = ACTIVE_TEAM::BLUE; }
+    else if(digitalRead(R_PRT) == HIGH) { team = ACTIVE_TEAM::RED; }
 
+    CRGB color = CRGB::White;
+    switch(team) {
+        case ACTIVE_TEAM::BLUE:
+            color = CRGB::Blue;
+            break;
+        case ACTIVE_TEAM::RED:
+            color = CRGB::Red;
+            break;
+    }
     for(int i = 0; i < NUM_LEDS; i++) {
-        if(team) {
-            leds[i] = CRGB::Blue;
-        }
-        else {
-            leds[i] = CRGB::Red;
-        }
+        leds[i] = color;
     }
     FastLED.show();
 }
@@ -152,8 +161,10 @@ void loop() {
         }
         case BOX_STATE::RUNNING: {
             static unsigned long match_begin{millis()};
+            static ACTIVE_TEAM win_team{ACTIVE_TEAM::NEUTRAL};
             if(last != BOX_STATE::RUNNING) {
                 match_begin = millis();
+                win_team = ACTIVE_TEAM::NEUTRAL;
             }
             if(millis() - match_begin < RING_START) { digitalWrite(HEADACHE, HIGH); }
             else { digitalWrite(HEADACHE, LOW); }
@@ -167,7 +178,7 @@ void loop() {
 
                 if(digitalRead(READY)) { state = BOX_STATE::CONFIG; }
             } else {
-                teamButtons();
+                teamButtons(win_team);
                 int sec = getSec(remain);
                 int min = getMin(remain);
                 timer.showNumberDecEx(sec, 0b111000000, true, 2, 2);
