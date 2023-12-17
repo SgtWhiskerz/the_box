@@ -128,6 +128,7 @@ BoxState *BoxRun::tick() {
     }
 
     if (digitalRead(READY) == HIGH) {
+      Serial.println("[INFO] Transitioning from RUNNING to CONFIG");
       return new BoxConfig();
     }
   } else {
@@ -163,6 +164,7 @@ BoxState *BoxGrace::tick() {
   }
 
   if (time - change > GRACE_PERIOD) {
+    Serial.println("[INFO] Transitioning from GRACE to RUNNING");
     return new BoxRun(limit);
   }
   return this;
@@ -226,6 +228,7 @@ void loop() {
   next = state->tick();
 
   if (digitalRead(RESET)) {
+    Serial.println("[INFO] Transitioning to CONFIG");
     delete next;
     next = new BoxConfig();
   }
@@ -235,6 +238,6 @@ void loop() {
     next = nullptr;
   }
 
-  Serial.print("Loop complete. Duration in milliseconds: ");
+  Serial.print("[DEBUG] Loop complete. Duration in milliseconds: ");
   Serial.println(millis() - tick_start);
 }
