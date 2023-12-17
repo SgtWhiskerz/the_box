@@ -65,9 +65,9 @@ inline void teamButtons(ACTIVE_TEAM &team) {
   } else if (red) {
     team = ACTIVE_TEAM::RED;
   }
+}
 
-  const int indx = static_cast<int>(team);
-  const CRGB color = team_colors[indx];
+inline void displayColor(const CRGB color) {
   for (int i = 0; i < NUM_LEDS; i++) {
     top_leds[i] = color;
     rhs_leds[i] = color;
@@ -131,6 +131,8 @@ BoxState *BoxRun::tick() {
     }
   } else {
     teamButtons(winning);
+    const int indx = static_cast<int>(winning);
+    displayColor(team_colors[indx]);
     displayMillis(remain);
   }
   return this;
