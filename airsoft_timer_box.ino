@@ -173,14 +173,14 @@ void loop() {
             if(machine.last != BOX_STATE::GRACE) {
                 shown_time = false;
             }
-            unsigned long elapsed_time = millis() - machine.change;
+            long elapsed_time = millis() - machine.change;
             if(!shown_time) {
                 displayMillis(time_limit);
                 if(elapsed_time > LIMIT_SHOWN) {
                     shown_time = true;
                 }
             } else {
-                unsigned long rem_grace = GRACE_PERIOD - elapsed_time;
+                long rem_grace = GRACE_PERIOD - elapsed_time;
                 displayMillis(rem_grace);
             }
 
@@ -199,7 +199,7 @@ void loop() {
             if(millis() - machine.change < RING_START) { digitalWrite(HEADACHE, HIGH); }
             else { digitalWrite(HEADACHE, LOW); }
 
-            unsigned long elapsed = millis() - machine.change;
+            long elapsed = millis() - machine.change;
             long remain = time_limit - elapsed;
             
             if(remain <= 0) {
