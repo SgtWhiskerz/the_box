@@ -44,6 +44,8 @@ constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
 
 constexpr int getMin(unsigned long int millis) { return millis / 60000; }
 
+constexpr long operator""_min(unsigned long long min) { return min * 60000; }
+
 inline void displayTime(const int min, const int sec) {
   timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
   timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
@@ -184,15 +186,15 @@ BoxState *BoxConfig::tick() {
     time = millis();
   }
   if (digitalRead(MIN_5) == HIGH) {
-    time_limit = 5 * 60000;
+    time_limit = 5_min;
     time_set = true;
   }
   if (digitalRead(MIN_10) == HIGH) {
-    time_limit = 10 * 60000;
+    time_limit = 10_min;
     time_set = true;
   }
   if (digitalRead(MIN_15) == HIGH) {
-    time_limit = 15 * 60000;
+    time_limit = 15_min;
     time_set = true;
   }
   if (time_set) {
