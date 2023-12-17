@@ -55,9 +55,13 @@ void displayMillis(unsigned long milli) {
 }
 
 void teamButtons(ACTIVE_TEAM &team) {
-  if (digitalRead(B_PRT) == HIGH) {
+  const bool blue = digitalRead(B_PRT) == HIGH;
+  const bool red = digitalRead(R_PRT) == HIGH;
+  if (blue && red) {
+    team = ACTIVE_TEAM::NEUTRAL;
+  } else if (blue) {
     team = ACTIVE_TEAM::BLUE;
-  } else if (digitalRead(R_PRT) == HIGH) {
+  } else if (red) {
     team = ACTIVE_TEAM::RED;
   }
 
