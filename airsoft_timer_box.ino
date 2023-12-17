@@ -43,18 +43,18 @@ constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
 
 constexpr int getMin(unsigned long int millis) { return millis / 60000; }
 
-void displayTime(int min, int sec) {
+inline void displayTime(const int min, const int sec) {
   timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
   timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
 }
 
-void displayMillis(unsigned long milli) {
+inline void displayMillis(unsigned long milli) {
   int sec = getSec(milli);
   int min = getMin(milli);
   displayTime(min, sec);
 }
 
-void teamButtons(ACTIVE_TEAM &team) {
+inline void teamButtons(ACTIVE_TEAM &team) {
   const bool blue = digitalRead(B_PRT) == HIGH;
   const bool red = digitalRead(R_PRT) == HIGH;
   if (blue && red) {
