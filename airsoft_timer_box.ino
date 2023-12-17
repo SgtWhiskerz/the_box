@@ -39,21 +39,43 @@ constexpr unsigned long RING_END = 1000;
 
 enum class ACTIVE_TEAM { NEUTRAL, BLUE, RED };
 
-enum class BOX_STATE { NONE, CONFIG, GRACE, RUNNING };
+constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
 
-char *stateToString(BOX_STATE state) {
-  switch (state) {
-  case BOX_STATE::NONE:
-    return "None";
-  case BOX_STATE::CONFIG:
-    return "Config";
-  case BOX_STATE::GRACE:
-    return "Grace";
-  case BOX_STATE::RUNNING:
-    return "Running";
-  default:
-    return "[Missing Entry]";
+constexpr int getMin(unsigned long int millis) { return millis / 60000; }
+
+void displayTime(int min, int sec) {
+  timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
+  timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
+}
+
+void displayMillis(unsigned long milli) {
+  int sec = getSec(milli);
+  int min = getMin(milli);
+  displayTime(min, sec);
+}
+
+void teamButtons(ACTIVE_TEAM &team) {
+  if (digitalRead(B_PRT) == HIGH) {
+    team = ACTIVE_TEAM::BLUE;
+  } else if (digitalRead(R_PRT) == HIGH) {
+    team = ACTIVE_TEAM::RED;
   }
+
+  CRGB color = CRGB::White;
+  switch (team) {
+  case ACTIVE_TEAM::BLUE:
+    color = CRGB::Blue;
+    break;
+  case ACTIVE_TEAM::RED:
+    color = CRGB::Red;
+    break;
+  }
+  for (int i = 0; i < NUM_LEDS; i++) {
+    top_leds[i] = color;
+    rhs_leds[i] = color;
+    lhs_leds[i] = color;
+  }
+  FastLED.show();
 }
 
 class BoxState {
@@ -148,6 +170,8 @@ BoxState *BoxGrace::tick() {
 
 BoxState *BoxConfig::tick() {
   static unsigned long time = 0;
+  bool time_set = false;
+  long time_limit = 0;
   if (time - change > 1000) {
     if (on) {
       timer.setSegments(all_on);
@@ -158,32 +182,25 @@ BoxState *BoxConfig::tick() {
     time = millis();
   }
   if (digitalRead(MIN_5) == HIGH) {
-    return new BoxGrace(5 * 60000);
+    time_limit = 5 * 60000;
+    time_set = true;
   }
   if (digitalRead(MIN_10) == HIGH) {
-    return new BoxGrace(10 * 60000);
+    time_limit = 10 * 60000;
+    time_set = true;
   }
   if (digitalRead(MIN_15) == HIGH) {
-    return new BoxGrace(15 * 60000);
+    time_limit = 15 * 60000;
+    time_set = true;
+  }
+  if (time_set) {
+    Serial.println("[INFO] Transitioning from CONFIG to GRACE");
+    Serial.print("[INFO]\tSelected time limit: ");
+    Serial.println(time_limit);
+    return new BoxGrace(time_limit);
   }
   return this;
 }
-
-struct BoxStateMachine {
-  BOX_STATE state = BOX_STATE::NONE;
-  BOX_STATE last = BOX_STATE::NONE;
-  unsigned long change = 0;
-
-  void transitionTo(BOX_STATE new_state) {
-    Serial.print("Request to change box state. From ");
-    Serial.print(stateToString(state));
-    Serial.print(" to ");
-    Serial.println(stateToString(new_state));
-    last = state;
-    state = new_state;
-    change = millis();
-  }
-};
 
 void setup() {
   Serial.begin(9600);
@@ -199,45 +216,6 @@ void setup() {
   pinMode(RESET, INPUT);
   pinMode(HEADACHE, OUTPUT);
   timer.setBrightness(5);
-}
-
-constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
-
-constexpr int getMin(unsigned long int millis) { return millis / 60000; }
-
-void displayTime(int min, int sec) {
-  timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
-  timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
-}
-
-void displayMillis(unsigned long milli) {
-  int sec = getSec(milli);
-  int min = getMin(milli);
-  displayTime(min, sec);
-}
-
-void teamButtons(ACTIVE_TEAM &team) {
-  if (digitalRead(B_PRT) == HIGH) {
-    team = ACTIVE_TEAM::BLUE;
-  } else if (digitalRead(R_PRT) == HIGH) {
-    team = ACTIVE_TEAM::RED;
-  }
-
-  CRGB color = CRGB::White;
-  switch (team) {
-  case ACTIVE_TEAM::BLUE:
-    color = CRGB::Blue;
-    break;
-  case ACTIVE_TEAM::RED:
-    color = CRGB::Red;
-    break;
-  }
-  for (int i = 0; i < NUM_LEDS; i++) {
-    top_leds[i] = color;
-    rhs_leds[i] = color;
-    lhs_leds[i] = color;
-  }
-  FastLED.show();
 }
 
 void loop() {
