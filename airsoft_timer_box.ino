@@ -37,7 +37,8 @@ constexpr unsigned long LIMIT_SHOWN = 5000;
 constexpr unsigned long RING_START = 750;
 constexpr unsigned long RING_END = 1000;
 
-enum class ACTIVE_TEAM { NEUTRAL, BLUE, RED };
+enum class ACTIVE_TEAM : int { NEUTRAL = 0, BLUE, RED };
+CRGB team_colors[] = {CRGB::White, CRGB::Blue, CRGB::Red};
 
 constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
 
@@ -65,15 +66,8 @@ inline void teamButtons(ACTIVE_TEAM &team) {
     team = ACTIVE_TEAM::RED;
   }
 
-  CRGB color = CRGB::White;
-  switch (team) {
-  case ACTIVE_TEAM::BLUE:
-    color = CRGB::Blue;
-    break;
-  case ACTIVE_TEAM::RED:
-    color = CRGB::Red;
-    break;
-  }
+  const int indx = static_cast<int>(team);
+  const CRGB color = team_colors[indx];
   for (int i = 0; i < NUM_LEDS; i++) {
     top_leds[i] = color;
     rhs_leds[i] = color;
