@@ -236,7 +236,7 @@ void loop() {
 
   next = state->tick();
 
-  if (digitalRead(RESET)) {
+  if (digitalRead(RESET) == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     delete next;
     next = new BoxConfig();
