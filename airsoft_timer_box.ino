@@ -147,10 +147,12 @@ void loop() {
     switch(machine.state) {
         case BOX_STATE::CONFIG: {
             static bool on{true};
-            if(millis() - machine.change > 1000) {
+            static long disp_change = millis();
+            if(millis() - disp_change > 1000) {
                 if(on) { timer.setSegments(all_on); }
                 else { timer.clear(); }
                 on = !on;
+                disp_change = millis();
             }
             if(digitalRead(MIN_5) == HIGH) {
                 time_limit = 5 * 60000;
