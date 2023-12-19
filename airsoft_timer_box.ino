@@ -93,6 +93,7 @@ protected:
 
 class BoxConfig : public BoxState {
 public:
+  virtual ~BoxConfig() = default;
   BoxState *tick() final;
 
 private:
@@ -103,6 +104,7 @@ private:
 class BoxRun : public BoxState {
 public:
   BoxRun(unsigned long);
+  virtual ~BoxRun() = default;
 
   BoxState *tick() final;
 
@@ -147,6 +149,7 @@ BoxState *BoxRun::tick() {
 class BoxGrace : public BoxState {
 public:
   BoxGrace(unsigned long);
+  virtual ~BoxGrace() = default;
 
   BoxState *tick() final;
 
