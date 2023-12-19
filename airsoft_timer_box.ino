@@ -66,7 +66,7 @@ char *stateToString(BOX_STATE state) {
 }
 
 struct BoxStateMachine {
-    BOX_STATE state = BOX_STATE::NONE;
+    BOX_STATE state = BOX_STATE::CONFIG;
     BOX_STATE last = BOX_STATE::NONE;
     unsigned long change = 0;
 
