@@ -84,8 +84,8 @@ struct BoxStateMachine {
 void setup() {
     Serial.begin(9600);
     FastLED.addLeds<NEOPIXEL, 2>(top_leds, NUM_LEDS);
-    // FastLED.addLeds<NEOPIXEL, _>(rhs_leds, NUM_LEDS);
-    // FastLED.addLeds<NEOPIXEL, _>(lhs_leds, NUM_LEDS);
+    FastLED.addLeds<NEOPIXEL, 10>(rhs_leds, NUM_LEDS);
+    FastLED.addLeds<NEOPIXEL, 24>(lhs_leds, NUM_LEDS);
     pinMode(B_PRT, INPUT);
     pinMode(R_PRT, INPUT);
     pinMode(MIN_5, INPUT);
