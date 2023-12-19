@@ -57,7 +57,7 @@ char *stateToString(BOX_STATE state) {
 }
 
 struct BoxStateMachine {
-  BOX_STATE state = BOX_STATE::NONE;
+  BOX_STATE state = BOX_STATE::CONFIG;
   BOX_STATE last = BOX_STATE::NONE;
   unsigned long change = 0;
 
@@ -75,8 +75,8 @@ struct BoxStateMachine {
 void setup() {
   Serial.begin(9600);
   FastLED.addLeds<NEOPIXEL, 2>(top_leds, NUM_LEDS);
-  // FastLED.addLeds<NEOPIXEL, _>(rhs_leds, NUM_LEDS);
-  // FastLED.addLeds<NEOPIXEL, _>(lhs_leds, NUM_LEDS);
+  FastLED.addLeds<NEOPIXEL, 10>(rhs_leds, NUM_LEDS);
+  FastLED.addLeds<NEOPIXEL, 24>(lhs_leds, NUM_LEDS);
   pinMode(B_PRT, INPUT);
   pinMode(R_PRT, INPUT);
   pinMode(MIN_5, INPUT);
@@ -139,13 +139,15 @@ void loop() {
   switch (machine.state) {
   case BOX_STATE::CONFIG: {
     static bool on{true};
-    if (millis() - machine.change > 1000) {
+    static long disp_change = millis();
+    if (millis() - disp_change > 1000) {
       if (on) {
         timer.setSegments(all_on);
       } else {
         timer.clear();
       }
       on = !on;
+      disp_change = millis();
     }
     if (digitalRead(MIN_5) == HIGH) {
       time_limit = 5 * 60000;
@@ -168,14 +170,14 @@ void loop() {
     if (machine.last != BOX_STATE::GRACE) {
       shown_time = false;
     }
-    unsigned long elapsed_time = millis() - machine.change;
+    long elapsed_time = millis() - machine.change;
     if (!shown_time) {
       displayMillis(time_limit);
       if (elapsed_time > LIMIT_SHOWN) {
         shown_time = true;
       }
     } else {
-      unsigned long rem_grace = GRACE_PERIOD - elapsed_time;
+      long rem_grace = GRACE_PERIOD - elapsed_time;
       displayMillis(rem_grace);
     }
 
@@ -197,7 +199,7 @@ void loop() {
       digitalWrite(HEADACHE, LOW);
     }
 
-    unsigned long elapsed = millis() - machine.change;
+    long elapsed = millis() - machine.change;
     long remain = time_limit - elapsed;
 
     if (remain <= 0) {
@@ -207,7 +209,7 @@ void loop() {
         digitalWrite(HEADACHE, LOW);
       }
 
-      if (digitalRead(READY) == HIGH) {
+      if (digitalRead(READY)) {
         machine.transitionTo(BOX_STATE::CONFIG);
       }
     } else {
