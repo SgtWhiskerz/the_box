@@ -226,7 +226,8 @@ void setup() {
   pinMode(READY, INPUT);
   pinMode(RESET, INPUT);
   pinMode(HEADACHE, OUTPUT);
-  timer.setBrightness(5);
+  timer.setBrightness(3);
+  displayColor(CRGB::White);
 }
 
 void loop() {
