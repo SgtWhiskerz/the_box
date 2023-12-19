@@ -45,6 +45,7 @@ constexpr int getSec(unsigned long millis) { return (millis / 1000) % 60; }
 constexpr int getMin(unsigned long int millis) { return millis / 60000; }
 
 constexpr long operator""_min(unsigned long long min) { return min * 60000; }
+constexpr long operator""_sec(unsigned long long sec) { return sec * 1000; }
 
 inline void displayTime(const int min, const int sec) {
   timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
