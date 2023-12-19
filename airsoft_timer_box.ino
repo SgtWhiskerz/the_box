@@ -97,6 +97,7 @@ public:
 
 private:
   bool on = true;
+  unsigned long last_blink = 0;
 };
 
 class BoxRun : public BoxState {
@@ -176,17 +177,17 @@ BoxState *BoxGrace::tick() {
 }
 
 BoxState *BoxConfig::tick() {
-  static unsigned long time = 0;
   bool time_set = false;
   long time_limit = 0;
-  if (time - change > 1000) {
+  long time = millis();
+  if (time - last_blink > 1000) {
     if (on) {
       timer.setSegments(all_on);
     } else {
       timer.clear();
     }
     on = !on;
-    time = millis();
+    last_blink = time;
   }
   if (digitalRead(MIN_5) == HIGH) {
     time_limit = 5_min;
