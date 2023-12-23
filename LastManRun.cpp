@@ -2,9 +2,9 @@
 
 #include "LastManRun.h"
 #include "Arduino.h"
-#include "LastManConfig.h"
 #include "Config.h"
-#include "FastLED.h"
+#include "DisplayManager.h"
+#include "GameConfig.h"
 #include "Helpers.h"
 
 CRGB TEAM_COLORS[] = {CRGB::White, CRGB::Blue, CRGB::Red};
@@ -27,6 +27,7 @@ BoxState *LastManRun::tick() {
   unsigned long time = millis();
   unsigned long elapsed = time - change;
   long remain = limit - elapsed;
+  DisplayManager dm = DisplayManager::get();
   if (elapsed < RING_START) {
     digitalWrite(HEADACHE, HIGH);
   } else {
@@ -43,13 +44,13 @@ BoxState *LastManRun::tick() {
 
     if (digitalRead(READY) == HIGH) {
       Serial.println("[INFO] Transitioning from RUNNING to CONFIG");
-      return new LastManConfig();
+      return new GameConfig();
     }
   } else {
     teamButtons(winner);
     const int indx = static_cast<int>(winner);
     displayColor(TEAM_COLORS[indx]);
-    displayMillis(remain);
+    dm.dispMillis(DisplayManager::Timers::Center, remain);
   }
   return this;
 }

@@ -6,17 +6,6 @@ CRGB top_leds[NUM_LEDS];
 CRGB rhs_leds[NUM_LEDS];
 CRGB lhs_leds[NUM_LEDS];
 
-void displayTime(const int min, const int sec) {
-  timer.showNumberDecEx(sec, 0b11100000, true, 2, 2);
-  timer.showNumberDecEx(min, 0b11100000, true, 2, 0);
-}
-
-void displayMillis(unsigned long milli) {
-  int sec = getSec(milli);
-  int min = getMin(milli);
-  displayTime(min, sec);
-}
-
 void displayColor(const CRGB color) {
   for (int i = 0; i < NUM_LEDS; i++) {
     top_leds[i] = color;

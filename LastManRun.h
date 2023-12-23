@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../BoxState.h"
-#include "../Config.h"
+#include "BoxState.h"
+#include "Config.h"
 
 class LastManRun : public BoxState {
 public:

@@ -1,18 +1,19 @@
-#include "LastManConfig.h"
-#include "Arduino.h"
-#include "LastManGrace.h"
+#include "GameConfig.h"
 #include "Config.h"
+#include "DisplayManager.h"
 #include "Helpers.h"
+#include "Arduino.h"
+#include "GameGrace.h"
 
-const uint8_t all_on[] = {0xff, 0xff, 0xff, 0xff};
-
-BoxState *LastManConfig::tick() {
+BoxState *GameConfig::tick() {
+  static const uint8_t all_on[] = {0xff, 0xff, 0xff, 0xff};
+  DisplayManager dm = DisplayManager::get();
   long time = millis();
   if (time - last_blink > 1000) {
     if (on) {
-      timer.setSegments(all_on);
+      dm.dispSegments(DisplayManager::Timers::Center, all_on);
     } else {
-      timer.clear();
+      dm.dispClear(DisplayManager::Timers::Center);
     }
     on = !on;
     last_blink = time;
@@ -33,7 +34,7 @@ BoxState *LastManConfig::tick() {
     Serial.println("[INFO] Transitioning from CONFIG to GRACE");
     Serial.print("[INFO]\tSelected time limit: ");
     Serial.println(time_limit);
-    return new LastManGrace(time_limit);
+    return new GameGrace(time_limit);
   }
   return this;
 }

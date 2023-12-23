@@ -18,7 +18,6 @@ void setup() {
   pinMode(READY, INPUT);
   pinMode(RESET, INPUT);
   pinMode(HEADACHE, OUTPUT);
-  timer.setBrightness(3);
   displayColor(CRGB::White);
 }
 
