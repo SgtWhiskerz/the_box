@@ -1,13 +1,13 @@
 #pragma once
 
-#include "BoxGrace.h"
-#include "BoxRun.h"
+#include "LastManGrace.h"
+#include "LastManRun.h"
 #include "Config.h"
 #include "Helpers.h"
 
-BoxGrace::BoxGrace(unsigned long r_limit) : limit(r_limit) {}
+LastManGrace::LastManGrace(unsigned long r_limit) : limit(r_limit) {}
 
-BoxState *BoxGrace::tick() {
+BoxState *LastManGrace::tick() {
   unsigned long time = millis();
   unsigned long elapsed = time - change;
   if (!cnt_dwn) {
@@ -21,7 +21,7 @@ BoxState *BoxGrace::tick() {
 
   if (time - change > GRACE_PERIOD) {
     Serial.println("[INFO] Transitioning from GRACE to RUNNING");
-    return new BoxRun(limit);
+    return new LastManRun(limit);
   }
   return this;
 }

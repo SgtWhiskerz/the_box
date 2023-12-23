@@ -1,6 +1,6 @@
-#include "BoxConfig.h"
-#include "BoxGrace.h"
-#include "BoxRun.h"
+#include "last_man/LastManConfig.h"
+#include "last_man/LastManGrace.h"
+#include "last_man/LastManRun.h"
 #include "BoxState.h"
 #include "Config.h"
 #include "FastLED.h"
@@ -23,7 +23,7 @@ void setup() {
 }
 
 void loop() {
-  static BoxState *state = new BoxConfig();
+  static BoxState *state = new LastManConfig();
   static BoxState *next = nullptr;
   unsigned long tick_start = millis();
 
@@ -32,7 +32,7 @@ void loop() {
   if (digitalRead(RESET) == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     delete next;
-    next = new BoxConfig();
+    next = new LastManConfig();
   }
   if (next != state) {
     delete state;

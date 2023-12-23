@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BoxRun.h"
+#include "LastManRun.h"
 #include "Arduino.h"
-#include "BoxConfig.h"
+#include "LastManConfig.h"
 #include "Config.h"
 #include "FastLED.h"
 #include "Helpers.h"
@@ -21,9 +21,9 @@ inline void teamButtons(ACTIVE_TEAM &team) {
   }
 }
 
-BoxRun::BoxRun(unsigned long r_limit) : limit(r_limit) {}
+LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {}
 
-BoxState *BoxRun::tick() {
+BoxState *LastManRun::tick() {
   unsigned long time = millis();
   unsigned long elapsed = time - change;
   long remain = limit - elapsed;
@@ -43,7 +43,7 @@ BoxState *BoxRun::tick() {
 
     if (digitalRead(READY) == HIGH) {
       Serial.println("[INFO] Transitioning from RUNNING to CONFIG");
-      return new BoxConfig();
+      return new LastManConfig();
     }
   } else {
     teamButtons(winner);

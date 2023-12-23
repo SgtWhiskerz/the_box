@@ -1,10 +1,10 @@
 #pragma once
 
-#include "BoxState.h"
+#include "../BoxState.h"
 
-class BoxConfig : public BoxState {
+class LastManConfig : public BoxState {
 public:
-  virtual ~BoxConfig() = default;
+  virtual ~LastManConfig() = default;
   BoxState *tick() final;
 
 private:
