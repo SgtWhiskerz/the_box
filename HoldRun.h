@@ -14,15 +14,16 @@ public:
   HoldRun(HoldRun &&) = default;
   HoldRun &operator=(const HoldRun &) = default;
   HoldRun &operator=(HoldRun &&) = default;
-  ~HoldRun() override = default;
+  ~HoldRun() override;
 
   BoxState *tick() final;
 
 private:
   ACTIVE_TEAM holders = ACTIVE_TEAM::Neutral;
   unsigned long limit;
-  long blu_time = 0;
-  long red_time = 0;
+  unsigned long lst_loop;
+  long blu_time;
+  long red_time;
 };
 
 #endif

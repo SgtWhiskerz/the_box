@@ -1,9 +1,9 @@
 #include "GameGrace.h"
 #include "Config.h"
 #include "DisplayManager.h"
-#include "dominate/DominateRun.h"
-#include "hold/HoldRun.h"
-#include "last_man/LastManRun.h"
+#include "DominateRun.h"
+#include "HoldRun.h"
+#include "LastManRun.h"
 
 GameGrace::GameGrace(GameGrace::Games sel_game, unsigned long r_limit)
     : act_game(sel_game), limit(r_limit) {}
@@ -25,7 +25,6 @@ BoxState *GameGrace::tick() {
     Serial.println("[INFO] Transitioning from GRACE to RUNNING");
     switch (act_game) {
     case GameGrace::Games::LastMan:
-
       return new LastManRun(limit);
     case GameGrace::Games::Hold:
       return new HoldRun(limit);

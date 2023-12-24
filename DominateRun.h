@@ -14,13 +14,14 @@ public:
   DominateRun(DominateRun &&) = default;
   DominateRun &operator=(const DominateRun &) = default;
   DominateRun &operator=(DominateRun &&) = default;
-  ~DominateRun() override = default;
+  ~DominateRun() override;
 
   BoxState *tick() final;
 
 private:
   ACTIVE_TEAM active_team = ACTIVE_TEAM::Neutral;
   unsigned long limit;
+  unsigned long lst_loop = millis();
   unsigned long blu_time = 0;
   unsigned long red_time = 0;
 };

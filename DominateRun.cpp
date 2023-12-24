@@ -1,8 +1,23 @@
 #include "DominateRun.h"
+#include "Config.h"
 #include "DisplayManager.h"
 #include "GameConfig.h"
+#include "Helpers.h"
 
-DominateRun::DominateRun(unsigned long r_limit) : limit(r_limit) {}
+DominateRun::DominateRun(unsigned long r_limit) : limit(r_limit) {
+  DisplayManager::get().dispClear(DisplayManager::Timers::Center);
+}
+
+DominateRun::~DominateRun() {
+  DisplayManager dm = DisplayManager::get();
+  if (blu_time > red_time) {
+    displayColor(CRGB::Blue);
+  } else if (red_time > blu_time) {
+    displayColor(CRGB::Red);
+  } else {
+    displayColor(CRGB::White);
+  }
+}
 
 BoxState *DominateRun::tick() {
   /*
@@ -12,7 +27,8 @@ BoxState *DominateRun::tick() {
   DisplayManager dm = DisplayManager::get();
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
-  const long t_diff = static_cast<long>(millis() - getChangePoint());
+  const unsigned long time = millis();
+  const unsigned long t_diff = time - lst_loop;
 
   if (blue && red) {
     active_team = ACTIVE_TEAM::Neutral;
@@ -21,18 +37,24 @@ BoxState *DominateRun::tick() {
   } else if (red) {
     active_team = ACTIVE_TEAM::Red;
   }
-  // TODO: disp team color
+
   if (active_team == ACTIVE_TEAM::Blue) {
-    blu_time = t_diff;
+    blu_time += t_diff;
+    displayColor(CRGB::Blue);
   } else if (active_team == ACTIVE_TEAM::Red) {
-    red_time = t_diff;
+    red_time += t_diff;
+    displayColor(CRGB::Red);
+  } else {
+    displayColor(CRGB::White);
   }
 
   dm.dispMillis(DisplayManager::Timers::Blue, blu_time);
   dm.dispMillis(DisplayManager::Timers::Red, red_time);
+  dm.dispMillis(DisplayManager::Timers::Center, limit - (time - getChangePoint()));
 
-  if (blu_time > limit || red_time > limit) {
+  if (time - getChangePoint() > limit) {
     return new GameConfig();
   }
+  lst_loop = time;
   return this;
 }
