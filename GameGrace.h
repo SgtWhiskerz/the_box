@@ -4,7 +4,7 @@
 
 class GameGrace : public BoxState {
 public:
-  enum class Games { LastMan, Dominate, Hold };
+  enum class Games { LastMan, Dominate, Hold, None };
 
   GameGrace(Games, unsigned long);
   virtual ~GameGrace() = default;

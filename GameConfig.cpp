@@ -5,10 +5,25 @@
 #include "TimeConfig.h"
 
 BoxState *GameConfig::tick() {
-  static const uint8_t ng_ptrn[] = {};
-  static const uint8_t lm_ptrn[] = {};
-  static const uint8_t dm_ptrn[] = {};
-  static const uint8_t hd_ptrn[] = {};
+  // Word 'none'
+  static const uint8_t ng_ptrn[] = {SEG_A | SEG_B | SEG_C | SEG_E | SEG_F,
+                                    SEG_A | SEG_B | SEG_C | SEG_D | SEG_E |
+                                        SEG_F,
+                                    SEG_A | SEG_B | SEG_C | SEG_E | SEG_F,
+                                    SEG_A | SEG_D | SEG_E | SEG_F | SEG_G};
+  // Word "LASN"
+  static const uint8_t lm_ptrn[] = {
+      SEG_D | SEG_E | SEG_F, SEG_A | SEG_B | SEG_C | SEG_E | SEG_F | SEG_G,
+      SEG_A | SEG_C | SEG_D | SEG_F | SEG_G,
+      SEG_A | SEG_B | SEG_C | SEG_E | SEG_F};
+  // Word "doM"
+  static const uint8_t dm_ptrn[] = {
+      SEG_B | SEG_C | SEG_D | SEG_E | SEG_G, SEG_C | SEG_D | SEG_E | SEG_G,
+      SEG_A | SEG_B | SEG_E | SEG_F, SEG_A | SEG_B | SEG_C};
+  // Word "HoLd"
+  static const uint8_t hd_ptrn[] = {
+      SEG_B | SEG_C | SEG_E | SEG_F | SEG_G, SEG_C | SEG_D | SEG_E | SEG_G,
+      SEG_D | SEG_E | SEG_F, SEG_B | SEG_C | SEG_D | SEG_E | SEG_G};
 
   DisplayManager dm = DisplayManager::get();
   const bool last_man = digitalRead(MIN_5) == HIGH;
@@ -40,7 +55,7 @@ BoxState *GameConfig::tick() {
   case GameGrace::Games::Hold:
     dm.dispSegments(DisplayManager::Timers::Center, hd_ptrn);
     break;
-  default:
+  case GameGrace::Games::None:
     dm.dispSegments(DisplayManager::Timers::Center, ng_ptrn);
     break;
   }

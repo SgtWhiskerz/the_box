@@ -9,7 +9,7 @@ public:
   BoxState *tick() final;
 
 private:
-  GameGrace::Games act_game;
+  GameGrace::Games act_game = GameGrace::Games::None;
   bool game_set = false;
   long t_select = 0;
 };
