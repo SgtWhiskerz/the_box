@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BoxState.h"
+#include "GameGrace.h"
 
 class GameConfig : public BoxState {
 public:
@@ -8,8 +9,7 @@ public:
   BoxState *tick() final;
 
 private:
-  bool on = true;
-  bool time_set = false;
-  long time_limit = 0;
-  unsigned long last_blink = 0;
+  GameGrace::Games act_game;
+  bool game_set = false;
+  long t_select = 0;
 };

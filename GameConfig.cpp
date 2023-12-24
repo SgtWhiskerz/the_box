@@ -1,40 +1,52 @@
 #include "GameConfig.h"
+#include "Arduino.h"
 #include "Config.h"
 #include "DisplayManager.h"
-#include "Helpers.h"
-#include "Arduino.h"
-#include "GameGrace.h"
+#include "TimeConfig.h"
 
 BoxState *GameConfig::tick() {
-  static const uint8_t all_on[] = {0xff, 0xff, 0xff, 0xff};
+  static const uint8_t ng_ptrn[] = {};
+  static const uint8_t lm_ptrn[] = {};
+  static const uint8_t dm_ptrn[] = {};
+  static const uint8_t hd_ptrn[] = {};
+
   DisplayManager dm = DisplayManager::get();
-  long time = millis();
-  if (time - last_blink > 1000) {
-    if (on) {
-      dm.dispSegments(DisplayManager::Timers::Center, all_on);
-    } else {
-      dm.dispClear(DisplayManager::Timers::Center);
-    }
-    on = !on;
-    last_blink = time;
+  const bool last_man = digitalRead(MIN_5) == HIGH;
+  const bool dominate = digitalRead(MIN_10) == HIGH;
+  const bool hold = digitalRead(MIN_15) == HIGH;
+  unsigned long time = millis();
+
+  if (last_man) {
+    act_game = GameGrace::Games::LastMan;
+    game_set = true;
+    t_select = time;
+  } else if (dominate) {
+    act_game = GameGrace::Games::Dominate;
+    game_set = true;
+    t_select = time;
+  } else if (hold) {
+    act_game = GameGrace::Games::Hold;
+    game_set = true;
+    t_select = time;
   }
-  if (digitalRead(MIN_5) == HIGH) {
-    time_limit = 5_min;
-    time_set = true;
+
+  switch (act_game) {
+  case GameGrace::Games::LastMan:
+    dm.dispSegments(DisplayManager::Timers::Center, lm_ptrn);
+    break;
+  case GameGrace::Games::Dominate:
+    dm.dispSegments(DisplayManager::Timers::Center, dm_ptrn);
+    break;
+  case GameGrace::Games::Hold:
+    dm.dispSegments(DisplayManager::Timers::Center, hd_ptrn);
+    break;
+  default:
+    dm.dispSegments(DisplayManager::Timers::Center, ng_ptrn);
+    break;
   }
-  if (digitalRead(MIN_10) == HIGH) {
-    time_limit = 10_min;
-    time_set = true;
-  }
-  if (digitalRead(MIN_15) == HIGH) {
-    time_limit = 15_min;
-    time_set = true;
-  }
-  if (time_set) {
-    Serial.println("[INFO] Transitioning from CONFIG to GRACE");
-    Serial.print("[INFO]\tSelected time limit: ");
-    Serial.println(time_limit);
-    return new GameGrace(time_limit);
+
+  if (game_set && time - t_select > LIMIT_SHOWN) {
+    return new TimeConfig(act_game);
   }
   return this;
 }

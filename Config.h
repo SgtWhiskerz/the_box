@@ -1,8 +1,5 @@
 #pragma once
 
-#include "FastLED.h"
-#include "TM1637Display.h"
-
 constexpr int NUM_LEDS = 4;
 
 // Team Buttons--------------------------------------------
@@ -22,10 +19,6 @@ constexpr int READY = 4;
 constexpr int RESET = 3;
 
 constexpr int HEADACHE = 52;
-
-constexpr int DIS_CLK = 22;
-constexpr int DIS_DIO = 23;
-extern TM1637Display timer;
 
 // Timings-------------------------------------------------
 
