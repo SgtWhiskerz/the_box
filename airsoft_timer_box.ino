@@ -24,11 +24,14 @@ void setup() {
 void loop() {
   static BoxState *state = new LastManConfig();
   static BoxState *next = nullptr;
+  static int r_btn_state = 0;
+  static int lr_btn_state = 0;
   unsigned long tick_start = millis();
 
   next = state->tick();
 
-  if (digitalRead(RESET) == HIGH) {
+  r_btn_state = digitalRead(RESET);
+  if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     delete next;
     next = new LastManConfig();
@@ -41,4 +44,5 @@ void loop() {
 
   Serial.print("[DEBUG] Loop complete. Duration in milliseconds: ");
   Serial.println(millis() - tick_start);
+  lr_btn_state = r_btn_state;
 }
