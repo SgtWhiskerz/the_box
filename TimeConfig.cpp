@@ -3,13 +3,15 @@
 #include "DisplayManager.h"
 #include "Helpers.h"
 
+constexpr unsigned long TGGLE_DUR = 1000;
+
 TimeConfig::TimeConfig(GameGrace::Games game) : act_game(game) {}
 
 BoxState *TimeConfig::tick() {
   static const uint8_t all_on[] = {0xff, 0xff, 0xff, 0xff};
   DisplayManager dm = DisplayManager::get();
-  long time = millis();
-  if (time - last_blink > 1000) {
+  unsigned long time = millis();
+  if (time - last_blink > TGGLE_DUR) {
     if (on) {
       dm.dispSegments(DisplayManager::Timers::Center, all_on);
     } else {

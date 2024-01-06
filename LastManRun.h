@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LAST_MAN_RUN_H
+#define LAST_MAN_RUN_H
 
 #include "BoxState.h"
 #include "Config.h"
@@ -6,7 +7,11 @@
 class LastManRun : public BoxState {
 public:
   LastManRun(unsigned long);
-  virtual ~LastManRun() = default;
+  LastManRun(LastManRun &) = default;
+  LastManRun(LastManRun &&) = default;
+  LastManRun &operator=(const LastManRun &) = default;
+  LastManRun &operator=(LastManRun &&) = default;
+  ~LastManRun() override = default;
 
   BoxState *tick() final;
 
@@ -14,3 +19,5 @@ private:
   ACTIVE_TEAM winner = ACTIVE_TEAM::Neutral;
   unsigned long limit;
 };
+
+#endif

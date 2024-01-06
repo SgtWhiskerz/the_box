@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONFIG_H
+#define CONFIG_H
 
 constexpr int NUM_LEDS = 4;
 
@@ -28,3 +29,5 @@ constexpr unsigned long RING_START = 750;
 constexpr unsigned long RING_END = 1000;
 
 enum class ACTIVE_TEAM : int { Neutral = 0, Blue, Red };
+
+#endif

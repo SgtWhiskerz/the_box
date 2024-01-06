@@ -29,20 +29,20 @@ BoxState *GameConfig::tick() {
   const bool last_man = digitalRead(MIN_5) == HIGH;
   const bool dominate = digitalRead(MIN_10) == HIGH;
   const bool hold = digitalRead(MIN_15) == HIGH;
-  unsigned long time = millis();
+  const unsigned long time = millis();
 
   if (last_man) {
     act_game = GameGrace::Games::LastMan;
     game_set = true;
-    t_select = time;
+    t_select = static_cast<long>(time);
   } else if (dominate) {
     act_game = GameGrace::Games::Dominate;
     game_set = true;
-    t_select = time;
+    t_select = static_cast<long>(time);
   } else if (hold) {
     act_game = GameGrace::Games::Hold;
     game_set = true;
-    t_select = time;
+    t_select = static_cast<long>(time);
   }
 
   switch (act_game) {

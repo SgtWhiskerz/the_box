@@ -1,9 +1,10 @@
-#pragma once
+#ifndef DISPLAY_MANAGER_H
+#define DISPLAY_MANAGER_H
 
 #include "TM1637Display.h"
 
-constexpr int CNTR_CLK = 0;
-constexpr int CNTR_DIG = 0;
+constexpr int CNTR_CLK = 22;
+constexpr int CNTR_DIG = 23;
 
 constexpr int BLU_CLK = 0;
 constexpr int BLU_DIG = 0;
@@ -22,8 +23,9 @@ public:
   void dispClear(Timers);
 
 private:
-  static DisplayManager *instance;
   TM1637Display scrns[3] = {TM1637Display(CNTR_CLK, CNTR_DIG),
                             TM1637Display(BLU_CLK, BLU_DIG),
                             TM1637Display(RED_CLK, RED_DIG)};
 };
+
+#endif

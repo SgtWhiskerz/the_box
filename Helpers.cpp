@@ -2,6 +2,10 @@
 #include "Config.h"
 #include "FastLED.h"
 
+constexpr int TOP_LED_PORT = 2;
+constexpr int RHT_LED_PORT = 10;
+constexpr int LFT_LED_PORT = 24;
+
 CRGB top_leds[NUM_LEDS];
 CRGB rhs_leds[NUM_LEDS];
 CRGB lhs_leds[NUM_LEDS];
@@ -16,7 +20,10 @@ void displayColor(const CRGB color) {
 }
 
 void initLED() {
-  FastLED.addLeds<NEOPIXEL, 2>(top_leds, NUM_LEDS);
-  FastLED.addLeds<NEOPIXEL, 10>(rhs_leds, NUM_LEDS);
-  FastLED.addLeds<NEOPIXEL, 48>(lhs_leds, NUM_LEDS);
+  CFastLED::addLeds<NEOPIXEL, TOP_LED_PORT>(static_cast<CRGB *>(top_leds),
+                                            NUM_LEDS);
+  CFastLED::addLeds<NEOPIXEL, RHT_LED_PORT>(static_cast<CRGB *>(rhs_leds),
+                                            NUM_LEDS);
+  CFastLED::addLeds<NEOPIXEL, LFT_LED_PORT>(static_cast<CRGB *>(lhs_leds),
+                                            NUM_LEDS);
 }

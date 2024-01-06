@@ -1,11 +1,7 @@
-#include "last_man/LastManConfig.h"
-#include "last_man/LastManGrace.h"
-#include "last_man/LastManRun.h"
 #include "BoxState.h"
 #include "Config.h"
-#include "FastLED.h"
+#include "GameConfig.h"
 #include "Helpers.h"
-#include "TM1637Display.h"
 
 void setup() {
   Serial.begin(9600);
@@ -22,7 +18,7 @@ void setup() {
 }
 
 void loop() {
-  static BoxState *state = new LastManConfig();
+  static BoxState *state = new GameConfig();
   static BoxState *next = nullptr;
   static int r_btn_state = 0;
   static int lr_btn_state = 0;
@@ -34,7 +30,9 @@ void loop() {
   if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     delete next;
-    next = new LastManConfig();
+    next = nullptr;
+    delete state;
+    state = new GameConfig();
   }
   if (next != state) {
     delete state;
