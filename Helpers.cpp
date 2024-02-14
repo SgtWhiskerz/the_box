@@ -29,5 +29,5 @@ void displayColor(const CRGB color) {
 void initLED() {
   FastLED.addLeds<NEOPIXEL, 2>(top_leds, NUM_LEDS);
   FastLED.addLeds<NEOPIXEL, 10>(rhs_leds, NUM_LEDS);
-  FastLED.addLeds<NEOPIXEL, 24>(lhs_leds, NUM_LEDS);
+  FastLED.addLeds<NEOPIXEL, 48>(lhs_leds, NUM_LEDS);
 }
