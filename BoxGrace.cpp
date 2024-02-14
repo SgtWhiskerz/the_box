@@ -14,9 +14,9 @@ BoxState *BoxGrace::tick() {
     displayMillis(limit);
     if (time - change > LIMIT_SHOWN) {
       cnt_dwn = true;
-    } else {
-      displayMillis(GRACE_PERIOD - elapsed);
     }
+  } else {
+    displayMillis(GRACE_PERIOD - elapsed);
   }
 
   if (time - change > GRACE_PERIOD) {
