@@ -16,9 +16,9 @@ BoxState *GameGrace::tick() {
     dispMan.dispMillis(DisplayManager::Timers::Center, limit);
     if (time - getChangePoint() > LIMIT_SHOWN) {
       cnt_dwn = true;
-    } else {
-      dispMan.dispMillis(DisplayManager::Timers::Center, GRACE_PERIOD - elapsed);
     }
+  } else {
+    dispMan.dispMillis(DisplayManager::Timers::Center, GRACE_PERIOD - elapsed);
   }
 
   if (time - getChangePoint() > GRACE_PERIOD) {
