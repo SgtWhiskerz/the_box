@@ -6,11 +6,11 @@
 constexpr int CNTR_CLK = 22;
 constexpr int CNTR_DIG = 23;
 
-constexpr int BLU_CLK = 0;
-constexpr int BLU_DIG = 0;
+constexpr int BLU_CLK = 48;
+constexpr int BLU_DIG = 49;
 
-constexpr int RED_CLK = 0;
-constexpr int RED_DIG = 0;
+constexpr int RED_CLK = 50;
+constexpr int RED_DIG = 51;
 
 class DisplayManager {
 public:
