@@ -20,20 +20,10 @@ inline void teamButtons(ACTIVE_TEAM &team) {
 }
 
 LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_START);
-  Serial1.write("awo0000s");
-  Serial1.flush();
+  playHorn(RING_START);
 }
 
-LastManRun::~LastManRun() {
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_END);
-  Serial1.write("awo0000s");
-  Serial1.flush();
-}
+LastManRun::~LastManRun() { playHorn(RING_END); }
 
 BoxState *LastManRun::tick() {
   const unsigned long time = millis();

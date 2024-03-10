@@ -5,11 +5,7 @@
 #include "Helpers.h"
 
 DominateRun::DominateRun(unsigned long r_limit) : limit(r_limit) {
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_START);
-  Serial1.write("awo0000s");
-  Serial1.flush();
+  playHorn(RING_START);
 }
 
 DominateRun::~DominateRun() {
@@ -21,11 +17,7 @@ DominateRun::~DominateRun() {
   } else {
     displayColor(CRGB::White);
   }
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_END);
-  Serial1.write("awo0000s");
-  Serial1.flush();
+  playHorn(RING_END);
 }
 
 BoxState *DominateRun::tick() {

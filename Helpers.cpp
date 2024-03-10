@@ -27,3 +27,11 @@ void initLED() {
   CFastLED::addLeds<NEOPIXEL, LFT_LED_PORT>(static_cast<CRGB *>(lhs_leds),
                                             NUM_LEDS);
 }
+
+void playHorn(unsigned long dur) {
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(dur);
+  Serial1.write("awo0000s");
+  Serial1.flush();
+}

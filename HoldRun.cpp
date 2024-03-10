@@ -7,11 +7,7 @@
 HoldRun::HoldRun(unsigned long r_limit)
     : limit(r_limit), blu_time(static_cast<long>(limit) / 2),
       red_time(static_cast<long>(limit) / 2) {
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_START);
-  Serial1.flush();
-  Serial1.write("awo0000s");
+  playHorn(RING_START);
 }
 
 HoldRun::~HoldRun() {
@@ -22,11 +18,7 @@ HoldRun::~HoldRun() {
   } else {
     displayColor(CRGB::Red);
   }
-  Serial1.write("awo0001s");
-  Serial1.flush();
-  delay(RING_END);
-  Serial1.write("awo0000s");
-  Serial1.flush();
+  playHorn(RING_END);
 }
 
 BoxState *HoldRun::tick() {

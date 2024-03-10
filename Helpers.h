@@ -27,4 +27,6 @@ void displayColor(CRGB color);
 
 void initLED();
 
+void playHorn(unsigned long dur);
+
 #endif
