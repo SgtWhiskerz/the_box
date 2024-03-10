@@ -25,7 +25,7 @@ constexpr int HEADACHE = 52;
 
 constexpr unsigned long GRACE_PERIOD = 10000;
 constexpr unsigned long LIMIT_SHOWN = 5000;
-constexpr unsigned long RING_START = 750;
+constexpr unsigned long RING_START = 1000;
 constexpr unsigned long RING_END = 1000;
 
 enum class ACTIVE_TEAM : int { Neutral = 0, Blue, Red };
