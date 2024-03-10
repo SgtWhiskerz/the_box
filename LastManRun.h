@@ -11,7 +11,7 @@ public:
   LastManRun(LastManRun &&) = default;
   LastManRun &operator=(const LastManRun &) = default;
   LastManRun &operator=(LastManRun &&) = default;
-  ~LastManRun() override = default;
+  ~LastManRun() override;
 
   BoxState *tick() final;
 

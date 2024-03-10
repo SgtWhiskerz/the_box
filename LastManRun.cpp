@@ -19,31 +19,32 @@ inline void teamButtons(ACTIVE_TEAM &team) {
   }
 }
 
-LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {}
+LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_START);
+  Serial1.write("awo0000s");
+  Serial1.flush();
+}
+
+LastManRun::~LastManRun() {
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_END);
+  Serial1.write("awo0000s");
+  Serial1.flush();
+}
 
 BoxState *LastManRun::tick() {
   const unsigned long time = millis();
   const unsigned long elapsed = time - getChangePoint();
   const long remain = static_cast<long>(limit - elapsed);
   DisplayManager dispMan = DisplayManager::get();
-  if (elapsed < RING_START) {
-    digitalWrite(HEADACHE, HIGH);
-  } else {
-    digitalWrite(HEADACHE, LOW);
-  }
 
-  if (remain < 0) {               // TODO: test this for game satisfaction
-                                  // should the game end at 00:00:00 or 00:00:??
-    if (remain * -1 < RING_END) { // ! careful, signed compared with unsigned
-      digitalWrite(HEADACHE, HIGH);
-    } else {
-      digitalWrite(HEADACHE, LOW);
-    }
-
-    if (digitalRead(READY) == HIGH) {
-      Serial.println("[INFO] Transitioning from RUNNING to CONFIG");
-      return new GameConfig();
-    }
+  if (remain < 0) { // TODO: test this for game satisfaction
+                    // should the game end at 00:00:00 or 00:00:??
+                    // ! careful, signed compared with unsigned
+    return new GameConfig();
   } else {
     teamButtons(winner);
     const int indx = static_cast<int>(winner);

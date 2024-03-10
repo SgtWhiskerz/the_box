@@ -5,7 +5,11 @@
 #include "Helpers.h"
 
 DominateRun::DominateRun(unsigned long r_limit) : limit(r_limit) {
-  DisplayManager::get().dispClear(DisplayManager::Timers::Center);
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_START);
+  Serial1.write("awo0000s");
+  Serial1.flush();
 }
 
 DominateRun::~DominateRun() {
@@ -17,6 +21,11 @@ DominateRun::~DominateRun() {
   } else {
     displayColor(CRGB::White);
   }
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_END);
+  Serial1.write("awo0000s");
+  Serial1.flush();
 }
 
 BoxState *DominateRun::tick() {
@@ -28,6 +37,7 @@ BoxState *DominateRun::tick() {
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
+  const unsigned long elapsed = time - getChangePoint();
   const unsigned long t_diff = time - lst_loop;
 
   if (blue && red) {
@@ -50,9 +60,9 @@ BoxState *DominateRun::tick() {
 
   dm.dispMillis(DisplayManager::Timers::Blue, blu_time);
   dm.dispMillis(DisplayManager::Timers::Red, red_time);
-  dm.dispMillis(DisplayManager::Timers::Center, limit - (time - getChangePoint()));
+  dm.dispMillis(DisplayManager::Timers::Center, limit - elapsed);
 
-  if (time - getChangePoint() > limit) {
+  if (elapsed > limit) {
     return new GameConfig();
   }
   lst_loop = time;

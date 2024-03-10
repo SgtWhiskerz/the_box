@@ -1,4 +1,5 @@
 #include "HoldRun.h"
+#include "Config.h"
 #include "DisplayManager.h"
 #include "GameConfig.h"
 #include "Helpers.h"
@@ -6,7 +7,11 @@
 HoldRun::HoldRun(unsigned long r_limit)
     : limit(r_limit), blu_time(static_cast<long>(limit) / 2),
       red_time(static_cast<long>(limit) / 2) {
-  DisplayManager::get().dispClear(DisplayManager::Timers::Center);
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_START);
+  Serial1.flush();
+  Serial1.write("awo0000s");
 }
 
 HoldRun::~HoldRun() {
@@ -17,6 +22,11 @@ HoldRun::~HoldRun() {
   } else {
     displayColor(CRGB::Red);
   }
+  Serial1.write("awo0001s");
+  Serial1.flush();
+  delay(RING_END);
+  Serial1.write("awo0000s");
+  Serial1.flush();
 }
 
 BoxState *HoldRun::tick() {
