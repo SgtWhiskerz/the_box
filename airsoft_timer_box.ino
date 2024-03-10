@@ -5,6 +5,7 @@
 
 void setup() {
   Serial.begin(9600);
+  Serial1.begin(9600);
   initLED();
   pinMode(B_PIN, INPUT);
   pinMode(R_PIN, INPUT);
@@ -15,6 +16,9 @@ void setup() {
   pinMode(RESET, INPUT);
   pinMode(HEADACHE, OUTPUT);
   displayColor(CRGB::White);
+  Serial1.write("awu2400s");
+  Serial1.write("awi1200s");
+  Serial1.flush();
 }
 
 void loop() {
