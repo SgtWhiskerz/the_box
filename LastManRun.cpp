@@ -20,6 +20,7 @@ inline void teamButtons(ACTIVE_TEAM &team) {
 }
 
 LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {
+  displayColor(CRGB::White);
   playHorn(RING_START);
 }
 

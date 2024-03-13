@@ -7,6 +7,7 @@
 HoldRun::HoldRun(unsigned long r_limit)
     : limit(r_limit), blu_time(static_cast<long>(limit) / 2),
       red_time(static_cast<long>(limit) / 2) {
+  displayColor(CRGB::White);
   playHorn(RING_START);
 }
 

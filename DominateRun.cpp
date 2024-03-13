@@ -5,6 +5,7 @@
 #include "Helpers.h"
 
 DominateRun::DominateRun(unsigned long r_limit) : limit(r_limit) {
+  displayColor(CRGB::White);
   playHorn(RING_START);
 }
 
