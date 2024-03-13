@@ -21,7 +21,7 @@ public:
 private:
   ACTIVE_TEAM holders = ACTIVE_TEAM::Neutral;
   unsigned long limit;
-  unsigned long lst_loop;
+  unsigned long lst_loop = millis();
   long blu_time;
   long red_time;
 };
