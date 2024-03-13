@@ -33,10 +33,10 @@ void loop() {
   r_btn_state = digitalRead(RESET);
   if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
-    delete next;
-    next = nullptr;
-    delete state;
-    state = new GameConfig();
+    if (next != nullptr && next != state) {
+      delete next;
+    }
+    next = new GameConfig();
   }
   if (next != state) {
     delete state;
