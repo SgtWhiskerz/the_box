@@ -12,7 +12,7 @@ HoldRun::HoldRun(unsigned long r_limit)
 }
 
 HoldRun::~HoldRun() {
-  if (blu_time < 0 && red_time < 0) {
+  if (blu_time < 0 && red_time < 0 || blu_time == red_time) {
     displayColor(CRGB::White);
   } else if (blu_time < 0) {
     displayColor(CRGB::Blue);
