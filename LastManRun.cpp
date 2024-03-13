@@ -20,6 +20,9 @@ inline void teamButtons(ACTIVE_TEAM &team) {
 }
 
 LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {
+  DisplayManager dm = DisplayManager::get();
+  dm.dispClear(DisplayManager::Timers::Blue);
+  dm.dispClear(DisplayManager::Timers::Red);
   displayColor(CRGB::White);
   playHorn(RING_START);
 }
