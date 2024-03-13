@@ -20,6 +20,7 @@ void setup() {
   Serial1.write("awi1200s");
   Serial1.write("awo0000s");
   Serial1.flush();
+  Serial.println("[INFO] Program started");
 }
 
 void loop() {
