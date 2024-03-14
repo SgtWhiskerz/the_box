@@ -44,13 +44,16 @@ BoxState *HoldRun::tick() {
     holders = ACTIVE_TEAM::Red;
   }
 
-  if (holders == ACTIVE_TEAM::Blue) {
+  switch (holders) {
+  case ACTIVE_TEAM::Blue:
     blu_time -= t_diff;
     displayColor(CRGB::Blue);
-  } else if (holders == ACTIVE_TEAM::Red) {
+    break;
+  case ACTIVE_TEAM::Red:
     red_time -= t_diff;
     displayColor(CRGB::Red);
-  } else {
+    break;
+  default:
     displayColor(CRGB::White);
   }
 

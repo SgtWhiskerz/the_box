@@ -41,13 +41,16 @@ BoxState *DominateRun::tick() {
     active_team = ACTIVE_TEAM::Red;
   }
 
-  if (active_team == ACTIVE_TEAM::Blue) {
+  switch (active_team) {
+  case ACTIVE_TEAM::Blue:
     blu_time += t_diff;
     displayColor(CRGB::Blue);
-  } else if (active_team == ACTIVE_TEAM::Red) {
+    break;
+  case ACTIVE_TEAM::Red:
     red_time += t_diff;
     displayColor(CRGB::Red);
-  } else {
+    break;
+  default:
     displayColor(CRGB::White);
   }
 
