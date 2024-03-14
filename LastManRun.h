@@ -16,7 +16,7 @@ public:
   BoxState *tick() final;
 
 private:
-  ACTIVE_TEAM winner = ACTIVE_TEAM::Neutral;
+  ACTIVE_TEAM active_team = ACTIVE_TEAM::Neutral;
   unsigned long limit;
 };
 
