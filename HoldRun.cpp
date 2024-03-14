@@ -34,7 +34,7 @@ BoxState *HoldRun::tick() {
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
-  const unsigned long t_diff = time - lst_loop;
+  const long t_diff = static_cast<long>(time - lst_loop);
 
   if (blue && red) {
     holders = ACTIVE_TEAM::Neutral;
