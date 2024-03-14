@@ -32,6 +32,10 @@ void loop() {
 
   next = state->tick();
 
+  if (digitalRead(READY) == HIGH) {
+    Serial1.write("awo0000s");
+  }
+
   r_btn_state = digitalRead(RESET);
   if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
