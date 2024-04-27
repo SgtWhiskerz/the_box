@@ -2,30 +2,30 @@
 #include "Config.h"
 #include "FastLED.h"
 
-constexpr int TOP_LED_PORT = 2;
-constexpr int RHT_LED_PORT = 10;
-constexpr int LFT_LED_PORT = 24;
+constexpr int TOP_LED_PORT = 10;
+constexpr int BTM_LED_PORT = 11;
 
-CRGB top_leds[NUM_LEDS];
-CRGB rhs_leds[NUM_LEDS];
-CRGB lhs_leds[NUM_LEDS];
+constexpr int TOP_NUM_LEDS = 42;
+constexpr int BTM_NUM_LEDS = 32;
+
+CRGB top_leds[TOP_NUM_LEDS];
+CRGB btm_leds[BTM_LED_PORT];
 
 void displayColor(const CRGB color) {
-  for (int i = 0; i < NUM_LEDS; i++) {
+  for (int i = 0; i < TOP_NUM_LEDS; i++) {
     top_leds[i] = color;
-    rhs_leds[i] = color;
-    lhs_leds[i] = color;
+  }
+  for (int i = 0; i < BTM_NUM_LEDS; i++) {
+    btm_leds[i] = color;
   }
   FastLED.show();
 }
 
 void initLED() {
-  CFastLED::addLeds<NEOPIXEL, TOP_LED_PORT>(static_cast<CRGB *>(top_leds),
-                                            NUM_LEDS);
-  CFastLED::addLeds<NEOPIXEL, RHT_LED_PORT>(static_cast<CRGB *>(rhs_leds),
-                                            NUM_LEDS);
-  CFastLED::addLeds<NEOPIXEL, LFT_LED_PORT>(static_cast<CRGB *>(lhs_leds),
-                                            NUM_LEDS);
+  CFastLED::addLeds<WS2812B, TOP_LED_PORT, GRB>(static_cast<CRGB *>(top_leds),
+                                                TOP_NUM_LEDS);
+  CFastLED::addLeds<WS2812B, BTM_LED_PORT, GRB>(static_cast<CRGB *>(btm_leds),
+                                                BTM_NUM_LEDS);
 }
 
 void playHorn(unsigned long dur) {

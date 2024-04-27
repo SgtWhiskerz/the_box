@@ -1,8 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-constexpr int NUM_LEDS = 4;
-
 // Team Buttons--------------------------------------------
 
 constexpr int B_PIN = 8;
