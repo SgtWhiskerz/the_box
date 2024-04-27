@@ -27,7 +27,7 @@ BoxState *LastManRun::tick() {
     active_team = ACTIVE_TEAM::Neutral;
   } else if (blue) {
     active_team = ACTIVE_TEAM::Blue;
-  } else {
+  } else if (red) {
     active_team = ACTIVE_TEAM::Red;
   }
 
