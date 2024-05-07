@@ -16,7 +16,7 @@ void setup() {
   pinMode(RESET, INPUT);
   pinMode(HEADACHE, OUTPUT);
   displayColor(CRGB::White);
-  Serial1.write("awu2400s");
+  Serial1.write("awu1400s");
   Serial1.write("awi1200s");
   Serial1.write("awo0000s");
   Serial1.flush();
