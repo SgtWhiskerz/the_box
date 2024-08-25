@@ -4,20 +4,20 @@
 // Team Buttons--------------------------------------------
 
 constexpr int B_PIN = 8;
-constexpr int R_PIN = 9;
+constexpr int R_PIN = 7;
 
 // Game Time Buttons---------------------------------------
 
-constexpr int MIN_5 = 7;
-constexpr int MIN_10 = 6;
-constexpr int MIN_15 = 5;
+constexpr int MIN_5 = 9;
+constexpr int MIN_10 = 10;
+constexpr int MIN_15 = 11;
 
 // Flow Control--------------------------------------------
 
-constexpr int READY = 4;
-constexpr int RESET = 3;
+constexpr int READY = 12;
+constexpr int RESET = 13;
 
-constexpr int HEADACHE = 52;
+constexpr int HEADACHE = 4;
 
 // Timings-------------------------------------------------
 

@@ -2,8 +2,8 @@
 #include "Config.h"
 #include "FastLED.h"
 
-constexpr int TOP_LED_PORT = 10;
-constexpr int BTM_LED_PORT = 11;
+constexpr int TOP_LED_PORT = 5;
+constexpr int BTM_LED_PORT = 6;
 
 constexpr int TOP_NUM_LEDS = 42;
 constexpr int BTM_NUM_LEDS = 32;
