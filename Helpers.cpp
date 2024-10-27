@@ -29,9 +29,7 @@ void initLED() {
 }
 
 void playHorn(unsigned long dur) {
-  Serial1.write("awo0001s");
-  Serial1.flush();
+  digitalWrite(HEADACHE, LOW);
   delay(dur);
-  Serial1.write("awo0000s");
-  Serial1.flush();
+  digitalWrite(HEADACHE, HIGH);
 }

@@ -5,7 +5,6 @@
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(9600);
   initLED();
   pinMode(B_PIN, INPUT);
   pinMode(R_PIN, INPUT);
@@ -14,29 +13,27 @@ void setup() {
   pinMode(MIN_15, INPUT);
   pinMode(READY, INPUT);
   pinMode(RESET, INPUT);
-  pinMode(HEADACHE, OUTPUT);
+  pinMode(HEADACHE, OUTPUT); // NOTE: relay requires LOW for ON state (HIGH for OFF)
+  digitalWrite(HEADACHE, HIGH);
   displayColor(CRGB::White);
-  Serial1.write("awu1400s");
-  Serial1.write("awi1200s");
-  Serial1.write("awo0000s");
-  Serial1.flush();
   Serial.println("[INFO] Program started");
 }
 
 void loop() {
   static BoxState *state = new GameConfig();
   static BoxState *next = nullptr;
-  static int r_btn_state = 0;
   static int lr_btn_state = 0;
   unsigned long tick_start = millis();
 
   next = state->tick();
 
   if (digitalRead(READY) == HIGH) {
-    Serial1.write("awo0000s");
+    digitalWrite(HEADACHE, LOW);
+  } else {
+    digitalWrite(HEADACHE, HIGH);
   }
 
-  r_btn_state = digitalRead(RESET);
+  const int r_btn_state = digitalRead(RESET);
   if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     if (next != nullptr && next != state) {
