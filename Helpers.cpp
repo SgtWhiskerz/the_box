@@ -21,6 +21,17 @@ void displayColor(const CRGB color) {
   FastLED.show();
 }
 
+void splitDispColor(CRGB color, bool side) {
+  const int split = TOP_NUM_LEDS / 2;
+  for (int i = 0; side && i < split; i++) {
+    top_leds[i] = color;
+  }
+  for (int i = split; !side && i < TOP_NUM_LEDS; i++) {
+    top_leds[i] = color;
+  }
+  FastLED.show();
+}
+
 void initLED() {
   CFastLED::addLeds<WS2812B, TOP_LED_PORT, GRB>(static_cast<CRGB *>(top_leds),
                                                 TOP_NUM_LEDS);

@@ -28,6 +28,12 @@ void DisplayManager::dispSegments(const Timers disp, const uint8_t *seg) {
   timer.setSegments(seg);
 }
 
+void DisplayManager::dispNum(const Timers disp, const int num) {
+  const int indx = static_cast<int>(disp);
+  TM1637Display timer = scrns[indx];
+  timer.showNumberDec(num);
+}
+
 void DisplayManager::dispClear(const Timers disp) {
   const int indx = static_cast<int>(disp);
   TM1637Display timer = scrns[indx];

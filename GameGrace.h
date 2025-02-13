@@ -5,7 +5,7 @@
 
 class GameGrace : public BoxState {
 public:
-  enum class Games { LastMan, Dominate, Hold, None };
+  enum class Games { LastMan, Dominate, Hold, Control, None };
 
   GameGrace(Games, unsigned long);
   GameGrace(const GameGrace &) = default;

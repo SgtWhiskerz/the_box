@@ -24,11 +24,16 @@ BoxState *GameConfig::tick() {
   static const uint8_t hd_ptrn[] = {
       SEG_B | SEG_C | SEG_E | SEG_F | SEG_G, SEG_C | SEG_D | SEG_E | SEG_G,
       SEG_D | SEG_E | SEG_F, SEG_B | SEG_C | SEG_D | SEG_E | SEG_G};
+  // Word "bUtt"
+  static const uint8_t ctrl_ptrn[] = {SEG_C | SEG_D | SEG_E | SEG_F | SEG_G,
+                                      SEG_B | SEG_C | SEG_D | SEG_E | SEG_F,
+                                      SEG_D | SEG_E | SEG_F | SEG_G,
+                                      SEG_D | SEG_E | SEG_F | SEG_G};
 
   DisplayManager dm = DisplayManager::get();
   const bool last_man = digitalRead(MIN_5) == HIGH;
   const bool dominate = digitalRead(MIN_10) == HIGH;
-  const bool hold = digitalRead(MIN_15) == HIGH;
+  const bool control = digitalRead(MIN_15) == HIGH;
   const unsigned long time = millis();
 
   if (last_man) {
@@ -39,8 +44,8 @@ BoxState *GameConfig::tick() {
     act_game = GameGrace::Games::Dominate;
     game_set = true;
     t_select = static_cast<long>(time);
-  } else if (hold) {
-    act_game = GameGrace::Games::Hold;
+  } else if (control) {
+    act_game = GameGrace::Games::Control;
     game_set = true;
     t_select = static_cast<long>(time);
   }
@@ -54,6 +59,9 @@ BoxState *GameConfig::tick() {
     break;
   case GameGrace::Games::Hold:
     dm.dispSegments(DisplayManager::Timers::Center, hd_ptrn);
+    break;
+  case GameGrace::Games::Control:
+    dm.dispSegments(DisplayManager::Timers::Center, ctrl_ptrn);
     break;
   case GameGrace::Games::None:
     dm.dispSegments(DisplayManager::Timers::Center, ng_ptrn);

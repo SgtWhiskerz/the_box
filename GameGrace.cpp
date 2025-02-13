@@ -1,5 +1,6 @@
 #include "GameGrace.h"
 #include "Config.h"
+#include "Control.h"
 #include "DisplayManager.h"
 #include "DominateRun.h"
 #include "HoldRun.h"
@@ -30,6 +31,8 @@ BoxState *GameGrace::tick() {
       return new HoldRun(limit);
     case GameGrace::Games::Dominate:
       return new DominateRun(limit);
+    case GameGrace::Games::Control:
+      return new Control(limit);
     }
   }
   return this;

@@ -25,6 +25,9 @@ constexpr long double operator""_sec(long double sec) { return sec * 1000; }
 
 void displayColor(CRGB color);
 
+// this is a terrible way to distinguish between sides
+void splitDispColor(CRGB color, bool side = false);
+
 void initLED();
 
 void playHorn(unsigned long dur);

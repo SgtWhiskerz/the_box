@@ -20,6 +20,7 @@ public:
 
   void dispMillis(Timers, unsigned long);
   void dispSegments(Timers, const uint8_t *);
+  void dispNum(Timers, const int);
   void dispClear(Timers);
 
 private:
