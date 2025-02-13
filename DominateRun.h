@@ -10,7 +10,7 @@
 class DominateRun : public BoxState {
 public:
   DominateRun(unsigned long);
-  DominateRun(DominateRun &) = default;
+  DominateRun(const DominateRun &) = default;
   DominateRun(DominateRun &&) = default;
   DominateRun &operator=(const DominateRun &) = default;
   DominateRun &operator=(DominateRun &&) = default;

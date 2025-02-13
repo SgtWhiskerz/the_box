@@ -7,7 +7,7 @@
 class LastManRun : public BoxState {
 public:
   LastManRun(unsigned long);
-  LastManRun(LastManRun &) = default;
+  LastManRun(const LastManRun &) = default;
   LastManRun(LastManRun &&) = default;
   LastManRun &operator=(const LastManRun &) = default;
   LastManRun &operator=(LastManRun &&) = default;

@@ -7,7 +7,7 @@
 class TimeConfig : public BoxState {
 public:
   TimeConfig(GameGrace::Games);
-  TimeConfig(TimeConfig &) = default;
+  TimeConfig(const TimeConfig &) = default;
   TimeConfig(TimeConfig &&) = default;
   TimeConfig &operator=(const TimeConfig &) = default;
   TimeConfig &operator=(TimeConfig &&) = default;

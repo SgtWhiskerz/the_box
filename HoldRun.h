@@ -10,7 +10,7 @@
 class HoldRun : public BoxState {
 public:
   HoldRun(unsigned long);
-  HoldRun(HoldRun &) = default;
+  HoldRun(const HoldRun &) = default;
   HoldRun(HoldRun &&) = default;
   HoldRun &operator=(const HoldRun &) = default;
   HoldRun &operator=(HoldRun &&) = default;

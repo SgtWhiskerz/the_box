@@ -8,7 +8,7 @@ public:
   enum class Games { LastMan, Dominate, Hold, None };
 
   GameGrace(Games, unsigned long);
-  GameGrace(GameGrace &) = default;
+  GameGrace(const GameGrace &) = default;
   GameGrace(GameGrace &&) = default;
   GameGrace &operator=(const GameGrace &) = default;
   GameGrace &operator=(GameGrace &&) = default;

@@ -6,7 +6,7 @@
 class BoxState {
 public:
   BoxState() = default;
-  BoxState(BoxState &) = default;
+  BoxState(const BoxState &) = default;
   BoxState(BoxState &&) = default;
   BoxState &operator=(const BoxState &) = default;
   BoxState &operator=(BoxState &&) = default;

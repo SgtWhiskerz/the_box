@@ -7,7 +7,7 @@
 class GameConfig : public BoxState {
 public:
   GameConfig() = default;
-  GameConfig(GameConfig &) = default;
+  GameConfig(const GameConfig &) = default;
   GameConfig(GameConfig &&) = default;
   GameConfig &operator=(const GameConfig &) = default;
   GameConfig &operator=(GameConfig &&) = default;
