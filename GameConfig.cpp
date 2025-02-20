@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include "Config.h"
 #include "DisplayManager.h"
+#include "Helpers.h"
 #include "TimeConfig.h"
 
 BoxState *GameConfig::tick() {
@@ -68,7 +69,7 @@ BoxState *GameConfig::tick() {
     break;
   }
 
-  if (game_set && time - t_select > LIMIT_SHOWN) {
+  if (game_set && time - t_select > 1_sec) {
     return new TimeConfig(act_game);
   }
   return this;
