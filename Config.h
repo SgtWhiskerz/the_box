@@ -6,18 +6,16 @@
 constexpr int B_PIN = 8;
 constexpr int R_PIN = 7;
 
-// Game Time Buttons---------------------------------------
+// Remote Relay--------------------------------------------
 
-constexpr int MIN_5 = 9;
-constexpr int MIN_10 = 10;
-constexpr int MIN_15 = 11;
+constexpr int REM_1 = 9;
+constexpr int REM_2 = 10;
+constexpr int REM_3 = 11;
+// constexpr int REM_4 = ;
+constexpr int REM_5 = 12;
+constexpr int REM_RESET = 13;
 
-// Flow Control--------------------------------------------
-
-constexpr int READY = 12;
-constexpr int RESET = 13;
-
-constexpr int HEADACHE = 4;
+constexpr int HORN_PIN = 4;
 
 // Timings-------------------------------------------------
 

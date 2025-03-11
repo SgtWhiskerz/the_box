@@ -32,9 +32,9 @@ BoxState *GameConfig::tick() {
                                       SEG_D | SEG_E | SEG_F | SEG_G};
 
   DisplayManager dm = DisplayManager::get();
-  const bool last_man = digitalRead(MIN_5) == HIGH;
-  const bool dominate = digitalRead(MIN_10) == HIGH;
-  const bool control = digitalRead(MIN_15) == HIGH;
+  const bool last_man = digitalRead(REM_1) == HIGH;
+  const bool dominate = digitalRead(REM_2) == HIGH;
+  const bool control = digitalRead(REM_3) == HIGH;
   const unsigned long time = millis();
 
   if (last_man) {

@@ -20,15 +20,15 @@ BoxState *TimeConfig::tick() {
     on = !on;
     last_blink = time;
   }
-  if (digitalRead(MIN_5) == HIGH) {
+  if (digitalRead(REM_1) == HIGH) {
     time_limit = 5_min;
     time_set = true;
   }
-  if (digitalRead(MIN_10) == HIGH) {
+  if (digitalRead(REM_2) == HIGH) {
     time_limit = 10_min;
     time_set = true;
   }
-  if (digitalRead(MIN_15) == HIGH) {
+  if (digitalRead(REM_3) == HIGH) {
     time_limit = 15_min;
     time_set = true;
   }

@@ -8,13 +8,13 @@ void setup() {
   initLED();
   pinMode(B_PIN, INPUT);
   pinMode(R_PIN, INPUT);
-  pinMode(MIN_5, INPUT);
-  pinMode(MIN_10, INPUT);
-  pinMode(MIN_15, INPUT);
-  pinMode(READY, INPUT);
-  pinMode(RESET, INPUT);
-  pinMode(HEADACHE, OUTPUT); // NOTE: relay requires LOW for ON state (HIGH for OFF)
-  digitalWrite(HEADACHE, HIGH);
+  pinMode(REM_1, INPUT);
+  pinMode(REM_2, INPUT);
+  pinMode(REM_3, INPUT);
+  pinMode(REM_5, INPUT);
+  pinMode(REM_RESET, INPUT);
+  pinMode(HORN_PIN, OUTPUT); // NOTE: relay requires LOW for ON state (HIGH for OFF)
+  digitalWrite(HORN_PIN, HIGH);
   displayColor(CRGB::White);
   Serial.println("[INFO] Program started");
 }
@@ -27,13 +27,13 @@ void loop() {
 
   next = state->tick();
 
-  if (digitalRead(READY) == HIGH) {
-    digitalWrite(HEADACHE, LOW);
+  if (digitalRead(REM_5) == HIGH) {
+    digitalWrite(HORN_PIN, LOW);
   } else {
-    digitalWrite(HEADACHE, HIGH);
+    digitalWrite(HORN_PIN, HIGH);
   }
 
-  const int r_btn_state = digitalRead(RESET);
+  const int r_btn_state = digitalRead(REM_RESET);
   if (r_btn_state != lr_btn_state && r_btn_state == HIGH) {
     Serial.println("[INFO] Transitioning to CONFIG");
     if (next != nullptr && next != state) {

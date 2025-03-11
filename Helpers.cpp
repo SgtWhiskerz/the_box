@@ -40,7 +40,7 @@ void initLED() {
 }
 
 void playHorn(unsigned long dur) {
-  digitalWrite(HEADACHE, LOW);
+  digitalWrite(HORN_PIN, LOW);
   delay(dur);
-  digitalWrite(HEADACHE, HIGH);
+  digitalWrite(HORN_PIN, HIGH);
 }
