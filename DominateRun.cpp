@@ -22,25 +22,43 @@ DominateRun::~DominateRun() {
 }
 
 BoxState *DominateRun::tick() {
-  /*
-   * Handle team buttons
-   * Increment team held time
-   */
   DisplayManager dm = DisplayManager::get();
+  const bool blue_override = digitalRead(REM_1) == HIGH;
+  const bool red_override = digitalRead(REM_2) == HIGH;
+  const bool neutral_override = digitalRead(REM_3) == HIGH;
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
   const unsigned long elapsed = time - getChangePoint();
   const unsigned long t_diff = time - lst_loop;
-
-  if (blue && red) {
+  if (blue_override || red_override || neutral_override) {
+    const unsigned long negation = time - swap_time;
+    switch (active_team) {
+    case ACTIVE_TEAM::Blue:
+      blu_time -= negation;
+      break;
+    case ACTIVE_TEAM::Red:
+      red_time -= negation;
+      break;
+    default:
+      // neutral team doesn't track time
+      // could try to add back to remaining game time
+      // effectively reseting the entire game state
+    }
+  }
+  if ((blue && red) || neutral_override) {
+    last_team = active_team;
     active_team = ACTIVE_TEAM::Neutral;
-  } else if (blue) {
+  } else if (blue || blue_override) {
+    last_team = active_team;
     active_team = ACTIVE_TEAM::Blue;
-  } else if (red) {
+  } else if (red || red_override) {
+    last_team = active_team;
     active_team = ACTIVE_TEAM::Red;
   }
-
+  if (active_team != last_team) {
+    swap_time = time;
+  }
   switch (active_team) {
   case ACTIVE_TEAM::Blue:
     blu_time += t_diff;
@@ -53,14 +71,13 @@ BoxState *DominateRun::tick() {
   default:
     displayColor(CRGB::White);
   }
-
   dm.dispMillis(DisplayManager::Timers::Blue, blu_time);
   dm.dispMillis(DisplayManager::Timers::Red, red_time);
   dm.dispMillis(DisplayManager::Timers::Center, limit - elapsed);
-
   if (elapsed > limit) {
     return new GameConfig();
   }
   lst_loop = time;
+  last_team = active_team;
   return this;
 }

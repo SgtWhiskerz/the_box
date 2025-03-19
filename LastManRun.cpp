@@ -16,21 +16,22 @@ LastManRun::LastManRun(unsigned long r_limit) : limit(r_limit) {
 LastManRun::~LastManRun() { playHorn(RING_END); }
 
 BoxState *LastManRun::tick() {
+  const bool blue_override = digitalRead(REM_1) == HIGH;
+  const bool red_override = digitalRead(REM_2) == HIGH;
+  const bool neutral_override = digitalRead(REM_3) == HIGH;
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
   const unsigned long elapsed = time - getChangePoint();
   const long remain = static_cast<long>(limit - elapsed);
   DisplayManager dispMan = DisplayManager::get();
-
-  if (blue && red) {
+  if ((blue && red) || neutral_override) {
     active_team = ACTIVE_TEAM::Neutral;
-  } else if (blue) {
+  } else if (blue || blue_override) {
     active_team = ACTIVE_TEAM::Blue;
-  } else if (red) {
+  } else if (red || red_override) {
     active_team = ACTIVE_TEAM::Red;
   }
-
   switch (active_team) {
   case ACTIVE_TEAM::Blue:
     displayColor(CRGB::Blue);
@@ -41,9 +42,7 @@ BoxState *LastManRun::tick() {
   default:
     displayColor(CRGB::White);
   }
-
   dispMan.dispMillis(DisplayManager::Timers::Center, remain);
-
   if (remain < 0) { // TODO: test this for game satisfaction
                     // should the game end at 00:00:00 or 00:00:??
                     // ! careful, signed compared with unsigned

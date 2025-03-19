@@ -20,10 +20,12 @@ public:
 
 private:
   ACTIVE_TEAM active_team = ACTIVE_TEAM::Neutral;
+  ACTIVE_TEAM last_team = ACTIVE_TEAM::Neutral;
   unsigned long limit;
   unsigned long lst_loop = millis();
   unsigned long blu_time = 0;
   unsigned long red_time = 0;
+  unsigned long swap_time = 0;
 };
 
 #endif

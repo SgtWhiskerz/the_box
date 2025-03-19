@@ -20,10 +20,13 @@ public:
 
 private:
   ACTIVE_TEAM holders = ACTIVE_TEAM::Neutral;
+  ACTIVE_TEAM last_holders = ACTIVE_TEAM::Neutral;
   unsigned long limit;
-  unsigned long lst_loop = millis();
+  unsigned long lst_loop = getChangePoint();
   long blu_time;
   long red_time;
+  unsigned long swap_time =
+      getChangePoint(); // init to game start time to avoid funky negations
 };
 
 #endif

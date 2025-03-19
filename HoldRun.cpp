@@ -25,25 +25,36 @@ HoldRun::~HoldRun() {
 }
 
 BoxState *HoldRun::tick() {
-  /*
-   * Handle button toggle
-   * set stored value to the start time - current
-   * Check win condition (one team exceeds the limit)
-   */
   DisplayManager dm = DisplayManager::get();
+  const bool blue_override = digitalRead(REM_1) == HIGH;
+  const bool red_override = digitalRead(REM_2) == HIGH;
+  const bool neutral_override = digitalRead(REM_3) == HIGH;
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
   const long t_diff = static_cast<long>(time - lst_loop);
-
-  if (blue && red) {
+  if (blue_override || red_override || neutral_override) {
+    const unsigned long negation = time - swap_time;
+    switch (holders) {
+    case ACTIVE_TEAM::Blue:
+      blu_time += static_cast<long>(negation);
+      break;
+    case ACTIVE_TEAM::Red:
+      red_time += static_cast<long>(negation);
+      break;
+    default:
+      // neutral team doesn't track time
+      // could try to add back to remaining game time
+      // effectively reseting the entire game state
+    }
+  }
+  if ((blue && red) || neutral_override) {
     holders = ACTIVE_TEAM::Neutral;
-  } else if (blue) {
+  } else if (blue || blue_override) {
     holders = ACTIVE_TEAM::Blue;
-  } else if (red) {
+  } else if (red || red_override) {
     holders = ACTIVE_TEAM::Red;
   }
-
   switch (holders) {
   case ACTIVE_TEAM::Blue:
     blu_time -= t_diff;
@@ -56,10 +67,11 @@ BoxState *HoldRun::tick() {
   default:
     displayColor(CRGB::White);
   }
-
+  if (holders != last_holders) {
+    swap_time = time;
+  }
   dm.dispMillis(DisplayManager::Timers::Blue, blu_time);
   dm.dispMillis(DisplayManager::Timers::Red, red_time);
-
   if (blu_time < 0 || red_time < 0) {
     return new GameConfig();
   }
