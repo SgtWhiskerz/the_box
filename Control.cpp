@@ -15,6 +15,7 @@ Control::Control(unsigned long duration) : limit(duration) {
   // game runs for at least TEAM_LOCK milliseconds
   red.tap = temp - TEAM_LOCK_DUR;
   blue.tap = temp - TEAM_LOCK_DUR;
+  playHorn(RING_START);
 }
 
 Control::~Control() {
