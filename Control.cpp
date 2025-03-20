@@ -30,11 +30,21 @@ Control::~Control() {
 
 BoxState *Control::tick() {
   DisplayManager dm = DisplayManager::get();
+  const bool blue_override = digitalRead(REM_1) == HIGH;
+  const bool red_override = digitalRead(REM_2) == HIGH;
+  static bool lst_boverride = blue_override;
+  static bool lst_roverride = red_override;
   const unsigned long time = millis();
   const unsigned long elapsed = time - getChangePoint();
   const long remain = static_cast<long>(limit - elapsed);
   const long r_lock_dur = static_cast<long>(time - red.tap);
   const long b_lock_dur = static_cast<long>(time - blue.tap);
+  if (blue_override && blue_override != lst_boverride) {
+    blue.score--;
+  }
+  if (red_override && red_override != lst_roverride) {
+    red.score--;
+  }
   if (digitalRead(R_PIN) == HIGH && r_lock_dur > TEAM_LOCK_DUR) {
     red.tap = time;
     red.score++;
@@ -67,5 +77,7 @@ BoxState *Control::tick() {
   if (elapsed > limit) {
     return new GameConfig();
   }
+  lst_boverride = blue_override;
+  lst_roverride = red_override;
   return this;
 }

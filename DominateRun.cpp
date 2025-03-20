@@ -26,12 +26,17 @@ BoxState *DominateRun::tick() {
   const bool blue_override = digitalRead(REM_1) == HIGH;
   const bool red_override = digitalRead(REM_2) == HIGH;
   const bool neutral_override = digitalRead(REM_3) == HIGH;
+  static bool lst_boverride = blue_override;
+  static bool lst_roverride = red_override;
+  static bool lst_noverride = neutral_override;
   const bool blue = digitalRead(B_PIN) == HIGH;
   const bool red = digitalRead(R_PIN) == HIGH;
   const unsigned long time = millis();
   const unsigned long elapsed = time - getChangePoint();
   const unsigned long t_diff = time - lst_loop;
-  if (blue_override || red_override || neutral_override) {
+  if ((blue_override && blue_override != lst_boverride) ||
+      (red_override && red_override != lst_roverride) ||
+      (neutral_override && neutral_override != lst_noverride)) {
     const unsigned long negation = time - swap_time;
     switch (active_team) {
     case ACTIVE_TEAM::Blue:
@@ -79,6 +84,9 @@ BoxState *DominateRun::tick() {
     return new GameConfig();
   }
   lst_loop = time;
+  lst_boverride = blue_override;
+  lst_roverride = red_override;
+  lst_noverride = neutral_override;
   last_team = active_team;
   return this;
 }
