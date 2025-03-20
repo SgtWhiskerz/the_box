@@ -9,7 +9,7 @@ constexpr int TOP_NUM_LEDS = 42;
 constexpr int BTM_NUM_LEDS = 32;
 
 CRGB top_leds[TOP_NUM_LEDS];
-CRGB btm_leds[BTM_LED_PORT];
+CRGB btm_leds[BTM_NUM_LEDS];
 
 void displayColor(const CRGB color) {
   for (int i = 0; i < TOP_NUM_LEDS; i++) {
