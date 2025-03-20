@@ -46,6 +46,7 @@ BoxState *HoldRun::tick() {
       // neutral team doesn't track time
       // could try to add back to remaining game time
       // effectively reseting the entire game state
+      break;
     }
   }
   if ((blue && red) || neutral_override) {
